@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Countries from "./components/Countries";
 
 function App() {
+  const [country, setCountry] = useState("");
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    axios.get("https://restcountries.com/v3.1/all").then((res) => {
+      console.log("res: ", res);
+      setCountries(res.data);
+    });
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      find countries{" "}
+      <input
+        value={country}
+        onChange={(e) => {
+          setCountry(e.target.value);
+        }}
+      />
+      <Countries countries={countries} country={country} />
     </div>
   );
 }
