@@ -12,5 +12,6 @@ export default function countries({ country, countries }) {
   if (len === 1) {
     return <Country data={filterCountries[0]} />;
   }
+  if (len === 0) return <div>no matches</div>;
   return <div>loading....</div>;
 }
