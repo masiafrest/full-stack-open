@@ -1,15 +1,21 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import services from "./services/persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [filter, setFilter] = useState("");
+  const notiInitialState = {
+    noti: false,
+    error: false,
+    message: "",
+  };
+  const [notification, setNotification] = useState(notiInitialState);
 
   useEffect(() => {
     services.getAllPersons().then((data) => {
@@ -40,19 +46,36 @@ const App = () => {
           setPersons(
             persons.map((person) => (person.id === data.id ? data : person))
           );
+          setNotification({
+            error: false,
+            noti: true,
+            message: `Added ${newName}`,
+          });
         });
       }
     } else {
       services.savePerson(newPerson).then((data) => {
         setPersons(persons.concat(data));
+        setNotification({
+          error: false,
+          noti: true,
+          message: `Added ${newName}`,
+        });
       });
     }
+    setTimeout(() => {
+      setNotification(notiInitialState);
+    }, 5000);
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter filter={filter} onChange={filterOnChange} />
+      {notification.noti ? (
+        <Notification notification={notification} />
+      ) : (
+        <Filter filter={filter} onChange={filterOnChange} />
+      )}
       <h2>add a new</h2>
       <PersonForm
         values={{ newName, newPhone }}
@@ -60,7 +83,12 @@ const App = () => {
         addName={addName}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} setPersons={setPersons} filter={filter} />
+      <Persons
+        persons={persons}
+        setPersons={setPersons}
+        filter={filter}
+        setNotification={setNotification}
+      />
     </div>
   );
 };
