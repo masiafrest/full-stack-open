@@ -1,5 +1,5 @@
-const app = require("express")();
-
+const express = require("express");
+const app = express();
 let persons = [
   {
     id: 1,
@@ -23,14 +23,18 @@ let persons = [
   },
 ];
 
+app.use(express.json());
+
 app.get("/api/persons", (req, res) => {
   res.json(persons);
 });
+
 app.get("/info", (req, res) => {
   res.send(
     "<div>Phonebook has info for 2 people</div><div>" + new Date() + "</div>"
   );
 });
+
 app.get("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   if (id) {
@@ -50,13 +54,18 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 app.post("/api/persons/", (req, res) => {
-  const generateId = () => {};
-  const id = Number(req.params.id);
-  if (id) {
-    persons = persons.filter((e) => e.id !== id);
-    res.status(204).json(persons);
+  const { name, number } = req.body;
+  if (name === "" || number === "") {
+    return res.status(400).send({ error: "name and number can not be empty" });
   }
-  res.status(404).end;
+  const isNameExist = persons.some((e) => e.name === name);
+  if (isNameExist) {
+    return res.status(409).send({ error: "name already exist" });
+  }
+  const len = persons.length;
+  const newPerson = { ...req.body, id: len + 1 };
+  persons.push(newPerson);
+  res.send(newPerson);
 });
 
 app.listen(3001, () => {
