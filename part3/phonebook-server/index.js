@@ -1,4 +1,7 @@
+const { application, json } = require("express");
 const express = require("express");
+const morgan = require("morgan");
+
 const app = express();
 let persons = [
   {
@@ -25,6 +28,23 @@ let persons = [
 
 app.use(express.json());
 
+morgan.token("body", (req, res) => JSON.stringify(req.body));
+
+app.use(
+  morgan(function (tokens, req, res) {
+    return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, "content-length"),
+      "-",
+      tokens["response-time"](req, res),
+      "ms",
+      tokens.body(req, res),
+    ].join(" ");
+  })
+);
+
 app.get("/api/persons", (req, res) => {
   res.json(persons);
 });
@@ -46,11 +66,12 @@ app.get("/api/persons/:id", (req, res) => {
 
 app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
-  if (id) {
+  const hasId = persons.some((e) => e.id === id);
+  if (hasId) {
     persons = persons.filter((e) => e.id !== id);
     res.status(204).json(persons);
   }
-  res.status(404).end;
+  res.status(404).send({ error: "person dont exist" });
 });
 
 app.post("/api/persons/", (req, res) => {
