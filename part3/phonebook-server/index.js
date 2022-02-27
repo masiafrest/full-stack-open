@@ -95,14 +95,18 @@ app.delete("/api/persons/:id", (req, res, next) => {
 app.put("/api/persons/:id", (req, res, next) => {
   const id = req.params.id;
   const { number } = req.body;
-  Person.findByIdAndUpdate(id, { number }, { new: true })
+  Person.findByIdAndUpdate(
+    id,
+    { number },
+    { new: true, runValidators: true, context: "query" }
+  )
     .then((updatedPerson) => {
       res.json(updatedPerson);
     })
     .catch((err) => next(err));
 });
 
-app.post("/api/persons/", (req, res) => {
+app.post("/api/persons/", (req, res, next) => {
   const { name, number } = req.body;
   if (name === "" || number === "") {
     return res.status(400).send({ error: "name and number can not be empty" });
@@ -120,9 +124,12 @@ app.post("/api/persons/", (req, res) => {
     number,
   });
 
-  person.save().then((savedPerson) => {
-    res.json(savedPerson);
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      res.json(savedPerson);
+    })
+    .catch((err) => next(err));
 });
 
 const unknownEndpoint = (request, response) => {
@@ -135,6 +142,9 @@ const errorHandler = (err, req, res, next) => {
 
   if (error.name === "CastError") {
     return res.status(400).send({ error: "malformatted id" });
+  }
+  if (error.name === "ValidationError") {
+    return res.status(400).send({ error: error.message });
   }
 
   next(error);

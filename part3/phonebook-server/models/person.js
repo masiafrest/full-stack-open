@@ -10,11 +10,15 @@ moongose
     console.log("connected to MongoDb");
   })
   .catch((err) => {
-    console.log("error connecting to MongoDb:", error.message);
+    console.log("error connecting to MongoDb:", err.message);
   });
 
 const personSchema = new moongose.Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+    minLength: 3,
+  },
   number: String,
 });
 
