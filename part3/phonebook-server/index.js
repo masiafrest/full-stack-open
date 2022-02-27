@@ -1,31 +1,35 @@
-const { application, json } = require("express");
+require("dotenv").config();
+
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-
 const app = express();
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+
+const Person = require("./models/person");
+const { response } = require("express");
+
+// let persons = [
+//   {
+//     id: 1,
+//     name: "Arto Hellas",
+//     number: "040-123456",
+//   },
+//   {
+//     id: 2,
+//     name: "Ada Lovelace",
+//     number: "39-44-5323523",
+//   },
+//   {
+//     id: 3,
+//     name: "Dan Abramov",
+//     number: "12-43-234345",
+//   },
+//   {
+//     id: 4,
+//     name: "Mary Poppendieck",
+//     number: "39-23-6423122",
+//   },
+// ];
 
 app.use(cors());
 app.use(express.json());
@@ -50,32 +54,52 @@ app.use(
 );
 
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Person.find({}).then((persons) => {
+    res.json(persons);
+  });
 });
 
 app.get("/info", (req, res) => {
-  res.send(
-    "<div>Phonebook has info for 2 people</div><div>" + new Date() + "</div>"
-  );
+  Person.countDocuments().then((count) => {
+    res.send(
+      `<div>Phonebook has info for ${count} people</div><div>${new Date()}</div>`
+    );
+  });
 });
 
-app.get("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  if (id) {
-    const person = persons.find((e) => e.id === id);
-    res.json(person);
-  }
-  res.status(404).end;
+app.get("/api/persons/:id", (req, res, next) => {
+  const id = req.params.id;
+  Person.findById(id)
+    .then((person) => {
+      if (person) {
+        res.json(person);
+      }
+      res.status(404).end();
+    })
+    .catch((err) => {
+      // consolo.log(error)
+      // res.status(400).send({error: 'malformatted id'})
+      next(err);
+    });
 });
 
-app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const hasId = persons.some((e) => e.id === id);
-  if (hasId) {
-    persons = persons.filter((e) => e.id !== id);
-    res.status(204).json(persons);
-  }
-  res.status(404).send({ error: "person dont exist" });
+app.delete("/api/persons/:id", (req, res, next) => {
+  const id = req.params.id;
+  Person.findByIdAndRemove(id)
+    .then((result) => {
+      res.status(204).end();
+    })
+    .catch((err) => next(err));
+});
+
+app.put("/api/persons/:id", (req, res, next) => {
+  const id = req.params.id;
+  const { number } = req.body;
+  Person.findByIdAndUpdate(id, { number }, { new: true })
+    .then((updatedPerson) => {
+      res.json(updatedPerson);
+    })
+    .catch((err) => next(err));
 });
 
 app.post("/api/persons/", (req, res) => {
@@ -83,15 +107,39 @@ app.post("/api/persons/", (req, res) => {
   if (name === "" || number === "") {
     return res.status(400).send({ error: "name and number can not be empty" });
   }
-  const isNameExist = persons.some((e) => e.name === name);
-  if (isNameExist) {
-    return res.status(409).send({ error: "name already exist" });
-  }
-  const len = persons.length;
-  const newPerson = { ...req.body, id: len + 1 };
-  persons.push(newPerson);
-  res.send(newPerson);
+  // Person.findOne({ name })
+  //   .exec()
+  //   .then((res) => {
+  //     if (res) {
+  //       return res.status(409).send({ error: "name already exist" });
+  //     }
+  //   });
+
+  const person = new Person({
+    name,
+    number,
+  });
+
+  person.save().then((savedPerson) => {
+    res.json(savedPerson);
+  });
 });
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+app.use(unknownEndpoint);
+
+const errorHandler = (err, req, res, next) => {
+  console.log(err.message);
+
+  if (error.name === "CastError") {
+    return res.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

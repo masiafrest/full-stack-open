@@ -1,0 +1,29 @@
+const moongose = require("mongoose");
+
+const url = process.env.MONGODB_URI;
+
+console.log("connecting to", url);
+
+moongose
+  .connect(url)
+  .then((res) => {
+    console.log("connected to MongoDb");
+  })
+  .catch((err) => {
+    console.log("error connecting to MongoDb:", error.message);
+  });
+
+const personSchema = new moongose.Schema({
+  name: String,
+  number: String,
+});
+
+personSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
+module.exports = moongose.model("Person", personSchema);
