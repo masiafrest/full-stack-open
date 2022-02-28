@@ -49,4 +49,9 @@ const blogs = [
   },
 ];
 
-module.exports = blogs;
+const initialBlogs = blogs.map((e) => {
+  const { author, likes, title, url } = e;
+  return { author, likes, title, url };
+});
+
+module.exports = { blogs, initialBlogs };

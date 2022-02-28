@@ -1,5 +1,5 @@
 const listHelper = require("../utils/list_helper");
-const mockBlogs = require("./mockBlogs");
+const { blogs } = require("./test_helpers");
 
 test("dummy return one", () => {
   const blog = [];
@@ -28,7 +28,7 @@ describe("total likes", () => {
 
 describe("favorite blog", () => {
   test("blog with more like", () => {
-    const res = listHelper.favoriteBlog(mockBlogs);
+    const res = listHelper.favoriteBlog(blogs);
     expect(res).toEqual({
       title: "Canonical string reduction",
       author: "Edsger W. Dijkstra",
@@ -39,7 +39,7 @@ describe("favorite blog", () => {
 
 describe("most blog", () => {
   test("author with more blogs", () => {
-    const res = listHelper.mostBlogs(mockBlogs);
+    const res = listHelper.mostBlogs(blogs);
     expect(res).toEqual({
       author: "Robert C. Martin",
       blogs: 3,
@@ -49,7 +49,7 @@ describe("most blog", () => {
 
 describe("most likes", () => {
   test("author with more likes", () => {
-    const res = listHelper.mostLikes(mockBlogs);
+    const res = listHelper.mostLikes(blogs);
     expect(res).toEqual({
       author: "Edsger W. Dijkstra",
       likes: 17,
