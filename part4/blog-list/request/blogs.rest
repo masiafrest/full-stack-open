@@ -1,0 +1,12 @@
+GET http://localhost:3001/api/blogs/
+
+###
+
+POST http://localhost:3001/api/blogs/
+
+{
+  "title": "hello wolrd",
+  "author": "me",
+  "url": "helloworld.com",
+  "likes": "5555",
+}
