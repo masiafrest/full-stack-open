@@ -11,6 +11,11 @@ test("blogs are returned as json", async () => {
     .expect("Content-Type", /application\/json/);
 });
 
+test("blogs are defined", async () => {
+  const res = await api.get("/api/blogs").expect(200);
+  console.log(res);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
