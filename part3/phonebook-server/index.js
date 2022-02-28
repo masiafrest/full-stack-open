@@ -111,13 +111,13 @@ app.post("/api/persons/", (req, res, next) => {
   if (name === "" || number === "") {
     return res.status(400).send({ error: "name and number can not be empty" });
   }
-  // Person.findOne({ name })
-  //   .exec()
-  //   .then((res) => {
-  //     if (res) {
-  //       return res.status(409).send({ error: "name already exist" });
-  //     }
-  //   });
+  Person.findOne({ name })
+    .exec()
+    .then((res) => {
+      if (res) {
+        next({ name: "SameName", message: "name already exist" });
+      }
+    });
 
   const person = new Person({
     name,
@@ -137,14 +137,17 @@ const unknownEndpoint = (request, response) => {
 };
 app.use(unknownEndpoint);
 
-const errorHandler = (err, req, res, next) => {
-  console.log(err.message);
+const errorHandler = (error, req, res, next) => {
+  console.log(error.message);
 
   if (error.name === "CastError") {
     return res.status(400).send({ error: "malformatted id" });
   }
   if (error.name === "ValidationError") {
     return res.status(400).send({ error: error.message });
+  }
+  if (error.name === "SameName") {
+    return res.status(409).send({ error: error.message });
   }
 
   next(error);

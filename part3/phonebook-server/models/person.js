@@ -19,7 +19,27 @@ const personSchema = new moongose.Schema({
     required: true,
     minLength: 3,
   },
-  number: String,
+  number: {
+    type: String,
+    required: true,
+    minLength: 8,
+    validate: {
+      validator: function (v) {
+        const arr = v.split("-");
+        console.log("arr", arr.length);
+        if (
+          arr.length < 2 ||
+          arr.length > 2 ||
+          arr[0].length > 3 ||
+          isNaN(arr[0]) ||
+          isNaN(arr[1])
+        ) {
+          return false;
+        }
+      },
+      message: (props) => `${props.value} invalid numbers`,
+    },
+  },
 });
 
 personSchema.set("toJSON", {

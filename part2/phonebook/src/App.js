@@ -42,26 +42,48 @@ const App = () => {
         `${newName} is already added to phonebook, replace the old number with a new one?`
       );
       if (res) {
-        services.updatePerson(haveName.id, newPerson).then((data) => {
-          setPersons(
-            persons.map((person) => (person.id === data.id ? data : person))
-          );
+        services
+          .updatePerson(haveName.id, newPerson)
+          .then((data) => {
+            setPersons(
+              persons.map((person) => (person.id === data.id ? data : person))
+            );
+            setNotification({
+              error: false,
+              noti: true,
+              message: `Added ${newName}`,
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            setNotification({
+              error: true,
+              noti: true,
+              message: error.message,
+            });
+          });
+      }
+    } else {
+      console.log("submiting person data");
+      services
+        .savePerson(newPerson)
+        .then((data) => {
+          console.log("data", data);
+          setPersons(persons.concat(data));
           setNotification({
             error: false,
             noti: true,
             message: `Added ${newName}`,
           });
+        })
+        .catch((error) => {
+          console.log("error", error);
+          setNotification({
+            error: true,
+            noti: true,
+            message: error.response.data.error,
+          });
         });
-      }
-    } else {
-      services.savePerson(newPerson).then((data) => {
-        setPersons(persons.concat(data));
-        setNotification({
-          error: false,
-          noti: true,
-          message: `Added ${newName}`,
-        });
-      });
     }
     setTimeout(() => {
       setNotification(notiInitialState);
