@@ -1,8 +1,8 @@
-const app = require("./app");
+const app = require("./src/app");
 const http = require("http");
 
-const config = require("./utils/config");
-const logger = require("./utils/logger");
+const config = require("./src/utils/config");
+const logger = require("./src/utils/logger");
 
 const server = http.createServer(app);
 
