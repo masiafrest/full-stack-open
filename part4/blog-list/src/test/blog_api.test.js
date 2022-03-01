@@ -37,14 +37,12 @@ test("blogs are defined", async () => {
 });
 
 test("post a blog", async () => {
-  console.log("posting");
   await api
     .post(url)
     .send(oneBlog)
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
-  console.log("find blogs");
   const blogs = await Blog.find({});
   expect(blogs).toHaveLength(initialBlogs.length + 1);
 });
@@ -70,6 +68,21 @@ test("post blogs without title and url", async () => {
     .expect(400)
     .expect("Content-Type", /application\/json/);
   expect(res.body.error).toContain("validation failed");
+});
+
+test("delete blog", async () => {
+  const res = await api.post(url).send(oneBlog);
+  const id = res.body.id;
+  await api.delete(`${url}/${id}`).expect(204);
+});
+
+test("update blog", async () => {
+  const res = await api.post(url).send(oneBlog);
+  const id = res.body.id;
+  const title = "im updated";
+  const updatedBlog = { title };
+  const updResult = await api.put(`${url}/${id}`).send(updatedBlog).expect(200);
+  expect(updResult.body.title).toContain(title);
 });
 
 afterAll(() => {

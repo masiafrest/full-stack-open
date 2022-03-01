@@ -2,11 +2,27 @@ GET http://localhost:3001/api/blogs/
 
 ###
 
+GET http://localhost:3001/api/blogs/621e8822d24deb5e7087021f
+
+###
+
 POST http://localhost:3001/api/blogs/
+Content-Type: application/json
+
+{"title": "hi",
+ "url": "hello",
+  "author": "auth",
+  "likes": "555"
+}
+###
+DELETE http://localhost:3001/api/blogs/621cfef78971f2c6da8a8ae6
+
+###
+PUT http://localhost:3001/api/blogs/621e88dfd24deb5e7087022e
+Content-Type: application/json
 
 {
-  "title": "hello wolrd",
-  "author": "me",
-  "url": "helloworld.com",
-  "likes": "5555",
+  "author": "AUTHii",
+  "likes": "55345"
 }
+
