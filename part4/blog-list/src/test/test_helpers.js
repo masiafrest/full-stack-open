@@ -1,3 +1,10 @@
+const oneBlog = {
+  title: "hello wolrd",
+  author: "me",
+  url: "helloworld.com",
+  likes: "5555",
+};
+
 const blogs = [
   {
     _id: "5a422a851b54a676234d17f7",
@@ -54,4 +61,4 @@ const initialBlogs = blogs.map((e) => {
   return { author, likes, title, url };
 });
 
-module.exports = { blogs, initialBlogs };
+module.exports = { blogs, initialBlogs, oneBlog };

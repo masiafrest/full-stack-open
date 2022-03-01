@@ -12,7 +12,11 @@ blogsRouter.get("/", async (request, response, next) => {
 
 blogsRouter.post("/", async (request, response, next) => {
   try {
-    const newBlog = new Blog(request.body);
+    let { likes } = request.body;
+    if (!likes) {
+      likes = 0;
+    }
+    const newBlog = new Blog({ ...request.body, likes });
     const blog = await newBlog.save();
     response.status(201).json(blog);
   } catch (err) {

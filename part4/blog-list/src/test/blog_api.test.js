@@ -4,7 +4,7 @@ const supertest = require("supertest");
 const api = supertest(app);
 
 const Blog = require("../models/blog");
-const { initialBlogs } = require("./test_helpers");
+const { initialBlogs, oneBlog } = require("./test_helpers");
 const url = "/api/blogs";
 
 beforeEach(async () => {
@@ -37,22 +37,39 @@ test("blogs are defined", async () => {
 });
 
 test("post a blog", async () => {
-  const newBlog = {
-    title: "hello wolrd",
-    author: "me",
-    url: "helloworld.com",
-    likes: "5555",
-  };
   console.log("posting");
   await api
     .post(url)
-    .send(newBlog)
+    .send(oneBlog)
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
   console.log("find blogs");
   const blogs = await Blog.find({});
   expect(blogs).toHaveLength(initialBlogs.length + 1);
+});
+
+test("post blogs without likes", async () => {
+  const newBlog = { ...oneBlog };
+  delete newBlog.likes;
+  const res = await api
+    .post(url)
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+  expect(res.body.likes).toBe(0);
+});
+
+test("post blogs without title and url", async () => {
+  const newBlog = { ...oneBlog };
+  delete newBlog.title;
+  delete newBlog.url;
+  const res = await api
+    .post(url)
+    .send(newBlog)
+    .expect(400)
+    .expect("Content-Type", /application\/json/);
+  expect(res.body.error).toContain("validation failed");
 });
 
 afterAll(() => {
