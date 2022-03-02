@@ -4,14 +4,18 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     require: true,
+    minlength: 3,
+    unique: true,
   },
   name: {
     type: String,
     require: true,
+    minlength: 3,
   },
   passwordHash: {
     type: String,
     require: true,
+    minlength: 3,
   },
   blogs: [
     {
@@ -21,11 +25,13 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
-userSchema.set("toJSON", (doc, returnedObj) => {
-  returnedObj.id = returnedObj._id.toString();
-  delete returnedObj._id;
-  delete returnedObj.__v;
-  delete returnedObj.passwordHash;
+userSchema.set("toJSON", {
+  transform: (doc, returnedObj) => {
+    returnedObj.id = returnedObj._id.toString();
+    delete returnedObj._id;
+    delete returnedObj.__v;
+    delete returnedObj.passwordHash;
+  },
 });
 
 const User = mongoose.model("User", userSchema);

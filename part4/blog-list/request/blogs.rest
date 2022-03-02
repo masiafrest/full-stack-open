@@ -8,6 +8,7 @@ GET http://localhost:3001/api/blogs/621e8822d24deb5e7087021f
 
 POST http://localhost:3001/api/blogs/
 Content-Type: application/json
+Authorization: Bearear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvbmFuIiwiaWQiOiI2MjFmYzljNWNkYjI5OTBiMWE0MGUzNTEiLCJpYXQiOjE2NDYyNTEwMTh9.sRchbcqqQS6eRBsM6YfKEsMGCWDQJU_yx4x7lztW4Rw 
 
 {"title": "hi",
  "url": "hello",

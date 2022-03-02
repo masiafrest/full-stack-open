@@ -58,4 +58,20 @@ describe("when there is initially one user in db", () => {
     const usersAtEnd = await usersInDb();
     expect(usersAtEnd).toEqual(usersAtStart);
   });
+
+  test("create user with name of 3 length will be a error", async () => {
+    const newUser = {
+      username: "ro",
+      name: "Superuser",
+      password: "salainen",
+    };
+
+    const res = await api
+      .post(url)
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+    console.log("less 3 :", res.body);
+    expect(res.body.error).toContain("validation failed");
+  });
 });
