@@ -29,12 +29,12 @@ blogsRouter.get("/:id", async (request, response, next) => {
 
 blogsRouter.post("/", async (request, response, next) => {
   try {
-    let { likes, userId } = request.body;
+    const user = await User.findById(request.user.id);
+
+    let { likes } = request.body;
     if (!likes) {
       likes = 0;
     }
-
-    const user = await User.findById(userId);
 
     const newBlog = new Blog({ ...request.body, likes, user: user._id });
     const blog = await newBlog.save();
@@ -50,9 +50,14 @@ blogsRouter.post("/", async (request, response, next) => {
 
 blogsRouter.delete("/:id", async (request, response, next) => {
   try {
+    const user = request.user;
     const id = request.params.id;
-    await Blog.findByIdAndRemove(id);
-    response.status(204).end();
+    const blog = await Blog.findById(id);
+    if (blog.user.toString() === user.id) {
+      await Blog.findByIdAndRemove(id);
+      return response.status(204).end();
+    }
+    response.status(403).json({ error: "wrong user" });
   } catch (error) {
     next(error);
   }

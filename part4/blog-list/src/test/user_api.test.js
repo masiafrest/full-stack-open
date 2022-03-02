@@ -71,7 +71,6 @@ describe("when there is initially one user in db", () => {
       .send(newUser)
       .expect(400)
       .expect("Content-Type", /application\/json/);
-    console.log("less 3 :", res.body);
     expect(res.body.error).toContain("validation failed");
   });
 });
