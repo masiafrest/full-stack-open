@@ -12,7 +12,8 @@ Content-Type: application/json
 {"title": "hi",
  "url": "hello",
   "author": "auth",
-  "likes": "555"
+  "likes": "555",
+  "userId":"621f91d4d11192a23e120564" 
 }
 ###
 DELETE http://localhost:3001/api/blogs/621cfef78971f2c6da8a8ae6
