@@ -4,7 +4,7 @@ const supertest = require("supertest");
 const api = supertest(app);
 
 const Blog = require("../models/blog");
-const { initialBlogs, oneBlog } = require("./test_helpers");
+const { initialBlogs, oneBlog } = require("./mock_blogs");
 const url = "/api/blogs";
 
 beforeEach(async () => {
