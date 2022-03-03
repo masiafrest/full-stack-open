@@ -24,6 +24,7 @@ const App = () => {
         <Login setUser={setUser} setErrorMessage={setErrorMessage} />
       ) : (
         <>
+          <h2>blogs</h2>
           <div>
             {user.name} is logged in
             <button
