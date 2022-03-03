@@ -10,9 +10,9 @@ POST http://localhost:3001/api/users/
 Content-Type: application/json
 
 {
-  "username": "ronan",
-    "name": "Superuser",
-    "password": "salainen"
+  "username": "12345",
+    "name": "12345",
+    "password": "12345"
 }
 ###
 DELETE http://localhost:3001/api/users/621cfef78971f2c6da8a8ae6
