@@ -4,6 +4,7 @@ import Login from "./components/Login";
 import CreateNewBlog from "./components/CreateNewBlog";
 import blogService from "./services/blogs";
 import Notification from "./components/Notification";
+import Showable from "./components/Showable";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -21,11 +22,12 @@ const App = () => {
   return (
     <>
       {notification && <Notification message={notification} />}
-      {user === null ? (
+      {user === null && (
         <Login setUser={setUser} setNotification={setNotification} />
-      ) : (
-        <>
-          <h2>blogs</h2>
+      )}
+      <>
+        <h2>blogs</h2>
+        {user !== null && (
           <div>
             {user.name} is logged in
             <button
@@ -37,10 +39,13 @@ const App = () => {
               logout
             </button>
           </div>
+        )}
+        <Showable label="create new blog">
           <CreateNewBlog setNotification={setNotification} />
-          <Blogs />
-        </>
-      )}
+        </Showable>
+        <Blogs />
+      </>
+      )
     </>
   );
 };

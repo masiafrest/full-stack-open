@@ -1,7 +1,7 @@
 const usersRouter = require("express").Router();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const { response } = require("../app");
+const { tokenExtractor, userExtractor } = require("../utils/middleware");
 
 usersRouter.get("/", async (req, res, next) => {
   try {
@@ -17,7 +17,7 @@ usersRouter.get("/", async (req, res, next) => {
   }
 });
 
-usersRouter.post("/", async (req, res, next) => {
+usersRouter.post("/", tokenExtractor, userExtractor, async (req, res, next) => {
   try {
     const { username, name, password } = req.body;
 
