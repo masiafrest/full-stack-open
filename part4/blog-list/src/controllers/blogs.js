@@ -59,14 +59,15 @@ blogsRouter.delete(
   userExtractor,
   async (request, response, next) => {
     try {
-      const user = request.user;
       const id = request.params.id;
       const blog = await Blog.findById(id);
-      if (blog.user.toString() === user.id) {
+      console.log(blog._id.toString() === id);
+      if (blog._id.toString() === id) {
+        console.log("deleting....");
         await Blog.findByIdAndRemove(id);
         return response.status(204).end();
       }
-      response.status(403).json({ error: "wrong user" });
+      response.status(403).json({ error: "blog dont exist " });
     } catch (error) {
       next(error);
     }
