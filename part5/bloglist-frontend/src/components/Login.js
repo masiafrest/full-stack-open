@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
 
-const Login = ({ setUser, setErrorMessage }) => {
+const Login = ({ setUser, setNotification }) => {
   const initialState = { username: "", password: "" };
   const [form, setForm] = useState(initialState);
 
@@ -19,9 +19,9 @@ const Login = ({ setUser, setErrorMessage }) => {
       setUser(user);
       setForm(initialState);
     } catch (error) {
-      setErrorMessage("Wrong credentials");
+      setNotification({ error: true, message: "Wrong credentials" });
       setTimeout(() => {
-        setErrorMessage(null);
+        setNotification(null);
       }, 5000);
     }
   };

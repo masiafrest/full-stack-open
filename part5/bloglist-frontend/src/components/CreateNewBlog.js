@@ -1,6 +1,7 @@
 import { useState } from "react";
+import blogService from "../services/blogs";
 
-export default function CreateNewBlog() {
+export default function CreateNewBlog({ setNotification }) {
   const initialState = {
     title: "",
     author: "",
@@ -12,9 +13,21 @@ export default function CreateNewBlog() {
     setForm((prevForm) => ({ ...prevForm, [target.name]: target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("submitin new note: ", form);
+    try {
+      console.log("submitin new note: ", form);
+      const response = await blogService.create(form);
+      setNotification({ error: false, message: `added title: ${form.title}` });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    } catch (error) {
+      setNotification({ error: true, message: error.message });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    }
   };
   return (
     <>
