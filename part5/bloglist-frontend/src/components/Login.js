@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
+import PropTypes from "prop-types";
 
 const Login = ({ setUser, setNotification }) => {
   const initialState = { username: "", password: "" };

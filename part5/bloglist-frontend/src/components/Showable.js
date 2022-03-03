@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 export default function Showable({ label, children }) {
   const [visible, setVisible] = useState(false);
@@ -21,3 +22,7 @@ export default function Showable({ label, children }) {
     </div>
   );
 }
+
+Showable.propTypes = {
+  label: PropTypes.string.isRequired,
+};
