@@ -12,7 +12,7 @@ const Blogs = ({ blog }) => {
 
   useEffect(async () => {
     const data = await blogService.getAll();
-    console.log("data", data);
+    setBlogs(data);
   }, []);
 
   return (

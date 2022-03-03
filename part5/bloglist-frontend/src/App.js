@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Blogs from "./components/Blogs";
 import Login from "./components/Login";
+import CreateNewBlog from "./components/CreateNewBlog";
 import blogService from "./services/blogs";
 
 const App = () => {
@@ -22,7 +23,21 @@ const App = () => {
       {user === null ? (
         <Login setUser={setUser} setErrorMessage={setErrorMessage} />
       ) : (
-        <Blogs />
+        <>
+          <div>
+            {user.name} is logged in
+            <button
+              onClick={() => {
+                window.localStorage.clear();
+                setUser(null);
+              }}
+            >
+              logout
+            </button>
+          </div>
+          <CreateNewBlog />
+          <Blogs />
+        </>
       )}
     </>
   );
