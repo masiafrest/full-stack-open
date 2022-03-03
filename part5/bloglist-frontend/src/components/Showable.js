@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 import PropTypes from "prop-types";
 
-export default function Showable({ label, children }) {
+const Showable = forwardRef(({ label, children }, ref) => {
   const [visible, setVisible] = useState(false);
   const hideWhenVisible = { display: visible ? "none" : "" };
   const showWhenVisible = { display: visible ? "" : "none" };
@@ -9,6 +9,10 @@ export default function Showable({ label, children }) {
   const toggleVisibility = () => {
     setVisible(!visible);
   };
+
+  useImperativeHandle(ref, () => {
+    return { toggleVisibility };
+  });
 
   return (
     <div>
@@ -21,8 +25,10 @@ export default function Showable({ label, children }) {
       </div>
     </div>
   );
-}
+});
 
 Showable.propTypes = {
   label: PropTypes.string.isRequired,
 };
+
+export default Showable;

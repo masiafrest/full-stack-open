@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blogs from "./components/Blogs";
 import Login from "./components/Login";
 import CreateNewBlog from "./components/CreateNewBlog";
@@ -9,6 +9,7 @@ import Showable from "./components/Showable";
 const App = () => {
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
+  const blogFormRef = useRef();
 
   useEffect(() => {
     const loggedUserJson = window.localStorage.getItem("loggedBlogappUser");
@@ -40,8 +41,11 @@ const App = () => {
             </button>
           </div>
         )}
-        <Showable label="create new blog">
-          <CreateNewBlog setNotification={setNotification} />
+        <Showable label="create new blog" ref={blogFormRef}>
+          <CreateNewBlog
+            setNotification={setNotification}
+            blogFormRef={blogFormRef}
+          />
         </Showable>
         <Blogs />
       </>

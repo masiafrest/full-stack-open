@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-export default function CreateNewBlog({ setNotification }) {
+export default function CreateNewBlog({ setNotification, blogFormRef }) {
   const initialState = {
     title: "",
     author: "",
@@ -16,7 +16,7 @@ export default function CreateNewBlog({ setNotification }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("submitin new note: ", form);
+      blogFormRef.current.toggleVisibility();
       const response = await blogService.create(form);
       setNotification({ error: false, message: `added title: ${form.title}` });
       setTimeout(() => {
