@@ -1,7 +1,6 @@
 import { useState } from "react";
-import blogService from "../services/blogs";
 
-export default function CreateNewBlog({ setNotification, blogFormRef }) {
+export default function CreateNewBlog({ addBlog }) {
   const initialState = {
     title: "",
     author: "",
@@ -13,21 +12,10 @@ export default function CreateNewBlog({ setNotification, blogFormRef }) {
     setForm((prevForm) => ({ ...prevForm, [target.name]: target.value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      blogFormRef.current.toggleVisibility();
-      const response = await blogService.create(form);
-      setNotification({ error: false, message: `added title: ${form.title}` });
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
-    } catch (error) {
-      setNotification({ error: true, message: error.message });
-      setTimeout(() => {
-        setNotification(null);
-      }, 5000);
-    }
+    addBlog(form);
+    setForm(initialState);
   };
   return (
     <>
@@ -35,16 +23,32 @@ export default function CreateNewBlog({ setNotification, blogFormRef }) {
       <form onSubmit={handleSubmit}>
         <div>
           title:{" "}
-          <input name="title" value={form.title} onChange={handleChange} />
+          <input
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            placeholder="add title"
+          />
         </div>
         <div>
           author:{" "}
-          <input name="author" value={form.author} onChange={handleChange} />
+          <input
+            name="author"
+            placeholder="add author"
+            value={form.author}
+            onChange={handleChange}
+          />
         </div>
         <div>
-          url: <input name="url" value={form.url} onChange={handleChange} />
+          url:{" "}
+          <input
+            name="url"
+            placeholder="add url"
+            value={form.url}
+            onChange={handleChange}
+          />
         </div>
-        <button type="submit">submit</button>
+        <button type="submit">save</button>
       </form>
     </>
   );

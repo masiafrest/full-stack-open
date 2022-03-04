@@ -17,14 +17,25 @@ test("Make a test which checks that the component displaying a blog renders the 
 });
 
 test("5.14 Make a test which checks that the blogs url and number of likes are shown when the button controlling the shown details has been clicked. ", () => {
+  render(<Blog blog={blog} />);
+
+  const toggleBtn = screen.getByText("view");
+  userEvent.click(toggleBtn);
+  screen.getByText(blog.url);
+  screen.getByText(blog.author);
+});
+
+test("5.15: Make a test which ensures that if the like button is clicked twice, the event handler the component received as props is called twice. ", () => {
   const mockDelHandler = jest.fn();
   const mockLikeHandler = jest.fn();
   render(
     <Blog blog={blog} handleDel={mockDelHandler} handleLike={mockLikeHandler} />
   );
+  const toggleBtn = screen.getByText("view");
+  userEvent.click(toggleBtn);
 
-  const button = screen.getByText("view");
-  userEvent.click(button);
-  screen.getByText(blog.url);
-  screen.getByText(blog.author);
+  const likeBtn = screen.getByText("like");
+  userEvent.click(likeBtn);
+  userEvent.click(likeBtn);
+  expect(mockLikeHandler.mock.calls).toHaveLength(2);
 });

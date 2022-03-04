@@ -20,6 +20,25 @@ const App = () => {
     }
   }, []);
 
+  const addBlog = async (blogObj) => {
+    try {
+      blogFormRef.current.toggleVisibility();
+      await blogService.create(blogObj);
+      setNotification({
+        error: false,
+        message: `added title: ${blogObj.title}`,
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    } catch (error) {
+      setNotification({ error: true, message: error.message });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    }
+  };
+
   return (
     <>
       {notification && <Notification message={notification} />}
@@ -42,10 +61,7 @@ const App = () => {
           </div>
         )}
         <Showable label="create new blog" ref={blogFormRef}>
-          <CreateNewBlog
-            setNotification={setNotification}
-            blogFormRef={blogFormRef}
-          />
+          <CreateNewBlog addBlog={addBlog} />
         </Showable>
         <Blogs />
       </>
