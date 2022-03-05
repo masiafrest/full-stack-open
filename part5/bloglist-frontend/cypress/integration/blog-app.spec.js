@@ -1,5 +1,12 @@
 describe("Blog app", function () {
+  const user = {
+    name: "naruto",
+    username: "hokage",
+    password: "hinata",
+  };
   beforeEach(function () {
+    cy.request("POST", "http://localhost:3001/api/testing/reset");
+    cy.request("POST", "http://localhost:3001/api/users", user);
     cy.visit("http://localhost:3000");
   });
   it("front page can be opened", function () {
@@ -10,10 +17,9 @@ describe("Blog app", function () {
     cy.contains("cancel").click();
   });
   it("user can login", function () {
-    const username = 12345;
-    cy.get('input[name="username"]').type(username);
-    cy.get("input[name='password']").type(username);
+    cy.get('input[name="username"]').type(user.username);
+    cy.get("input[name='password']").type(user.password);
     cy.contains("login").click();
-    cy.contains(`${username} is logged in`);
+    cy.contains(`${user.name} is logged in`);
   });
 });
