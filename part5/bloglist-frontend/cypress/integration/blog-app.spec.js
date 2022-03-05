@@ -15,29 +15,28 @@ describe("Blog app", function () {
     cy.contains("blog");
   });
 
-  it("login form can be opened", function () {
+  it("create form can be opened", function () {
     cy.contains("create new blog").click();
     cy.contains("cancel").click();
   });
 
-  it("user can login", function () {
-    cy.get('input[name="username"]').type(user.username);
-    cy.get("input[name='password']").type(user.password);
-    cy.contains("login").click();
-    cy.contains(`${user.name} is logged in`);
-  });
+  describe("Login", function () {
+    it("user can login", function () {
+      cy.get('input[name="username"]').type(user.username);
+      cy.get("input[name='password']").type(user.password);
+      cy.contains("login").click();
+      cy.contains(`${user.name} is logged in`);
+    });
 
-  it("user can login", function () {
-    cy.get('input[name="username"]').type(user.username);
-    cy.get("input[name='password']").type(user.password);
-    cy.contains("login").click();
-    cy.contains(`${user.name} is logged in`);
-  });
-
-  it("user unsuccesful attemps", function () {
-    cy.get('input[name="username"]').type(user.username);
-    cy.get("input[name='password']").type(user.username);
-    cy.contains("login").click();
-    cy.contains(`Wrong credential`);
+    it.only("user unsuccesful attemps", function () {
+      cy.get('input[name="username"]').type(user.username);
+      cy.get("input[name='password']").type(user.username);
+      cy.contains("login").click();
+      cy.contains(`Wrong credential`).should(
+        "have.css",
+        "color",
+        "rgb(255, 0, 0)"
+      );
+    });
   });
 });

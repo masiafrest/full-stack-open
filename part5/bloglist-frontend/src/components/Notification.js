@@ -1,6 +1,7 @@
 export default function Notifications({ message }) {
   const errorStyle = {
     border: "1px solid red",
+    color: "red",
   };
   const successStyle = {
     border: "1px solid black",
