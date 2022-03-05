@@ -28,7 +28,7 @@ describe("Blog app", function () {
       cy.contains(`${user.name} is logged in`);
     });
 
-    it.only("user unsuccesful attemps", function () {
+    it("user unsuccesful attemps", function () {
       cy.get('input[name="username"]').type(user.username);
       cy.get("input[name='password']").type(user.username);
       cy.contains("login").click();
@@ -37,6 +37,21 @@ describe("Blog app", function () {
         "color",
         "rgb(255, 0, 0)"
       );
+    });
+  });
+
+  describe.only("When logged in", function () {
+    beforeEach(function () {
+      const { username, password } = user;
+      cy.login({ username, password });
+      cy.createBlog({
+        author: "minato",
+        title: "way of ninja",
+        url: "naruto.com",
+      });
+    });
+    it("A blog can be create", function () {
+      cy.contains("create new blog").click();
     });
   });
 });
