@@ -31,4 +31,7 @@ Showable.propTypes = {
   label: PropTypes.string.isRequired,
 };
 
+// add to displayName to close lint error
+Showable.displayName = "Showable";
+
 export default Showable;

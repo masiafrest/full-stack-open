@@ -1,5 +1,4 @@
 import { useState } from "react";
-import blogService from "../services/blogs";
 
 const Blog = ({ blog, handleLike, handleDel }) => {
   const [visible, setVisible] = useState(false);

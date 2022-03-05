@@ -1,7 +1,6 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
-import PropTypes from "prop-types";
 
 const Login = ({ setUser, setNotification }) => {
   const initialState = { username: "", password: "" };
@@ -34,9 +33,10 @@ const Login = ({ setUser, setNotification }) => {
           username <input name="username" onChange={handleChange} />
         </div>
         <div>
-          password <input name="password" onChange={handleChange} />
+          password{" "}
+          <input name="password" type="password" onChange={handleChange} />
         </div>
-        <button type="submit">submit</button>
+        <button type="submit">login</button>
       </form>
     </>
   );

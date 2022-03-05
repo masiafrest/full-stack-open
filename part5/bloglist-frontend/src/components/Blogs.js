@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import blogService from "../services/blogs";
 import Blog from "./Blog";
 
-const Blogs = ({ blog }) => {
+const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
 
   useEffect(async () => {
