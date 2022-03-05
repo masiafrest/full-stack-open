@@ -4,7 +4,22 @@ describe("Blog app", function () {
     username: "hokage",
     password: "hinata",
   };
-
+  const orochimaruBlog = {
+    author: "orochimaru",
+    title: "1000 jutsu",
+    url: "orochimaru.com",
+  };
+  const minatoBlog = {
+    author: "minato",
+    title: "way of ninja",
+    url: "naruto.com",
+  };
+  const itachiBlog = {
+    author: "itachi",
+    title: "loyal",
+    url: "itachi.com",
+    likes: 10,
+  };
   beforeEach(function () {
     cy.request("POST", "http://localhost:3001/api/testing/reset");
     cy.request("POST", "http://localhost:3001/api/users", user);
@@ -40,12 +55,7 @@ describe("Blog app", function () {
     });
   });
 
-  describe.only("When logged in", function () {
-    const minatoBlog = {
-      author: "minato",
-      title: "way of ninja",
-      url: "naruto.com",
-    };
+  describe("When logged in", function () {
     beforeEach(function () {
       const { username, password } = user;
       cy.login({ username, password });
@@ -53,11 +63,6 @@ describe("Blog app", function () {
     });
 
     it("A blog can be create", function () {
-      const orochimaruBlog = {
-        author: "orochimaru",
-        title: "1000 jutsu",
-        url: "orochimaru.com",
-      };
       cy.contains("create new blog").click();
       cy.get('input[name="title"]').type(orochimaruBlog.title);
       cy.get('input[name="author"]').type(orochimaruBlog.author);
@@ -78,10 +83,29 @@ describe("Blog app", function () {
       cy.contains("likes").contains("like").click().parent().contains(1);
     });
 
-    it.only("Can delete a blog", function () {
+    it("Can delete a blog", function () {
       cy.get("#blogs").contains(minatoBlog.title).contains("view").click();
       cy.get("#blogs").contains("delete").click();
       cy.get("#blogs").should("not.contain", minatoBlog.title);
+    });
+  });
+
+  describe.only("Blogs", function () {
+    beforeEach(function () {
+      const { username, password } = user;
+      cy.login({ username, password });
+      cy.createBlog(minatoBlog);
+      cy.createBlog(orochimaruBlog);
+      cy.createBlog(itachiBlog);
+    });
+
+    it("blogs are order by likes", function () {
+      cy.contains(minatoBlog.title);
+      cy.contains(itachiBlog.title);
+      cy.get("#blogs").contains(minatoBlog.title).contains("view").click();
+      cy.get("#blogs").contains(orochimaruBlog.title).contains("view").click();
+      cy.get("#blogs").contains(itachiBlog.title).contains("view").click();
+      // cy.get("#likes");
     });
   });
 });

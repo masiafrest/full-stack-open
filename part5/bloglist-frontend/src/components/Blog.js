@@ -16,14 +16,14 @@ const Blog = ({ blog, handleLike, handleDel }) => {
 
   const btnLabel = visible ? "hide" : "view";
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} id="blog">
       <div className="title">
         title: {blog.title} <button onClick={handleVisible}>{btnLabel}</button>
       </div>
       {visible && (
         <>
           <div>url: {blog.url}</div>
-          <div>
+          <div id="likes">
             likes: {blog.likes}
             <button onClick={() => handleLike(blog)}>like</button>
           </div>
