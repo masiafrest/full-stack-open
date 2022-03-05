@@ -41,32 +41,41 @@ describe("Blog app", function () {
   });
 
   describe.only("When logged in", function () {
+    const minatoBlog = {
+      author: "minato",
+      title: "way of ninja",
+      url: "naruto.com",
+    };
     beforeEach(function () {
       const { username, password } = user;
       cy.login({ username, password });
-      cy.createBlog({
-        author: "minato",
-        title: "way of ninja",
-        url: "naruto.com",
-      });
+      cy.createBlog(minatoBlog);
     });
+
     it("A blog can be create", function () {
-      const blog = {
+      const orochimaruBlog = {
         author: "orochimaru",
         title: "1000 jutsu",
         url: "orochimaru.com",
       };
       cy.contains("create new blog").click();
-      cy.get('input[name="title"]').type(blog.title);
-      cy.get('input[name="author"]').type(blog.author);
-      cy.get('input[name="url"]').type(blog.url);
+      cy.get('input[name="title"]').type(orochimaruBlog.title);
+      cy.get('input[name="author"]').type(orochimaruBlog.author);
+      cy.get('input[name="url"]').type(orochimaruBlog.url);
       cy.contains("save").click();
 
-      cy.contains(`added title: ${blog.title}`);
-      cy.get("#blogs").contains(blog.title).contains("view").click();
-      cy.contains(blog.author);
-      cy.contains(blog.url);
+      cy.contains(`added title: ${orochimaruBlog.title}`);
+      cy.get("#blogs").contains(orochimaruBlog.title).contains("view").click();
+      cy.contains(orochimaruBlog.author);
+      cy.contains(orochimaruBlog.url);
       cy.contains("likes");
+    });
+
+    it.only("A blog can be liked", function () {
+      cy.get("#blogs").contains(minatoBlog.title).contains("view").click();
+      cy.contains(minatoBlog.author);
+      cy.contains(minatoBlog.url);
+      cy.contains("likes").contains("like").click().parent().contains(1);
     });
   });
 });
