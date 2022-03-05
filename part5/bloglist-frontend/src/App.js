@@ -8,6 +8,7 @@ import Showable from "./components/Showable";
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [blogs, setBlogs] = useState([]);
   const [notification, setNotification] = useState(null);
   const blogFormRef = useRef();
 
@@ -23,7 +24,8 @@ const App = () => {
   const addBlog = async (blogObj) => {
     try {
       blogFormRef.current.toggleVisibility();
-      await blogService.create(blogObj);
+      const responseData = await blogService.create(blogObj);
+      setBlogs((prevBlogs) => [...prevBlogs, responseData]);
       setNotification({
         error: false,
         message: `added title: ${blogObj.title}`,
@@ -63,7 +65,7 @@ const App = () => {
         <Showable label="create new blog" ref={blogFormRef}>
           <CreateNewBlog addBlog={addBlog} />
         </Showable>
-        <Blogs />
+        <Blogs blogsState={[blogs, setBlogs]} />
       </>
       )
     </>

@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import blogService from "../services/blogs";
 import Blog from "./Blog";
 
-const Blogs = () => {
-  const [blogs, setBlogs] = useState([]);
+const Blogs = ({ blogsState }) => {
+  const [blogs, setBlogs] = blogsState;
 
   useEffect(async () => {
     const data = await blogService.getAll();
