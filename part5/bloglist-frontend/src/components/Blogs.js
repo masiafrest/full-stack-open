@@ -29,6 +29,9 @@ const Blogs = ({ blogsState }) => {
     const ans = window.confirm(`Remove ${blog.title} ?`);
     if (ans) {
       blogService.deleteBlog(blog.id);
+      setBlogs((prevBlogs) =>
+        prevBlogs.filter((pBlog) => pBlog.id !== blog.id)
+      );
     }
   };
   return (

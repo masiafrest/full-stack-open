@@ -71,11 +71,17 @@ describe("Blog app", function () {
       cy.contains("likes");
     });
 
-    it.only("A blog can be liked", function () {
+    it("A blog can be liked", function () {
       cy.get("#blogs").contains(minatoBlog.title).contains("view").click();
       cy.contains(minatoBlog.author);
       cy.contains(minatoBlog.url);
       cy.contains("likes").contains("like").click().parent().contains(1);
+    });
+
+    it.only("Can delete a blog", function () {
+      cy.get("#blogs").contains(minatoBlog.title).contains("view").click();
+      cy.get("#blogs").contains("delete").click();
+      cy.get("#blogs").should("not.contain", minatoBlog.title);
     });
   });
 });
