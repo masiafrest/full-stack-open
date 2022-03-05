@@ -51,7 +51,22 @@ describe("Blog app", function () {
       });
     });
     it("A blog can be create", function () {
+      const blog = {
+        author: "orochimaru",
+        title: "1000 jutsu",
+        url: "orochimaru.com",
+      };
       cy.contains("create new blog").click();
+      cy.get('input[name="title"]').type(blog.title);
+      cy.get('input[name="author"]').type(blog.author);
+      cy.get('input[name="url"]').type(blog.url);
+      cy.contains("save").click();
+
+      cy.contains(`added title: ${blog.title}`);
+      cy.get("#blogs").contains(blog.title).contains("view").click();
+      cy.contains(blog.author);
+      cy.contains(blog.url);
+      cy.contains("likes");
     });
   });
 });

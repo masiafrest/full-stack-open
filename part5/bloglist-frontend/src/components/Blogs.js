@@ -13,6 +13,17 @@ const Blogs = ({ blogsState }) => {
   const handleLike = (blog) => {
     const newObj = { likes: blog.likes + 1 };
     blogService.put(blog.id, newObj);
+    setBlogs((prevBlogs) =>
+      prevBlogs.map((pblog) => {
+        if (pblog.id === blog.id) {
+          return {
+            ...pblog,
+            ...newObj,
+          };
+        }
+        return pblog;
+      })
+    );
   };
   const handleDel = (blog) => {
     const ans = window.confirm(`Remove ${blog.title} ?`);
@@ -21,7 +32,7 @@ const Blogs = ({ blogsState }) => {
     }
   };
   return (
-    <div>
+    <section id="blogs">
       {blogs
         .sort((a, b) => a.likes - b.likes)
         .map((blog) => (
@@ -32,7 +43,7 @@ const Blogs = ({ blogsState }) => {
             handleLike={handleLike}
           />
         ))}
-    </div>
+    </section>
   );
 };
 
