@@ -13,6 +13,7 @@ describe("Blog app", function () {
     author: "minato",
     title: "way of ninja",
     url: "naruto.com",
+    likes: 100,
   };
   const itachiBlog = {
     author: "itachi",
@@ -100,12 +101,31 @@ describe("Blog app", function () {
     });
 
     it("blogs are order by likes", function () {
-      cy.contains(minatoBlog.title);
-      cy.contains(itachiBlog.title);
-      cy.get("#blogs").contains(minatoBlog.title).contains("view").click();
-      cy.get("#blogs").contains(orochimaruBlog.title).contains("view").click();
-      cy.get("#blogs").contains(itachiBlog.title).contains("view").click();
-      // cy.get("#likes");
+      cy.contains(minatoBlog.title)
+        .find("button")
+        .should("contain", "view")
+        .click()
+        .parent()
+        .parent()
+        .as("minatoBlog");
+      cy.contains(orochimaruBlog.title)
+        .find("button")
+        .should("contain", "view")
+        .click()
+        .parent()
+        .parent()
+        .as("orochimaruBlog");
+      cy.contains(itachiBlog.title)
+        .find("button")
+        .should("contain", "view")
+        .click()
+        .parent()
+        .parent()
+        .as("itachiBlog");
+      cy.get("#blogs").then((blogs) => {
+        //iterate over blogs?
+        console.log(blogs);
+      });
     });
   });
 });
