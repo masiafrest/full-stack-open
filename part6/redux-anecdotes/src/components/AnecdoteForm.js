@@ -1,4 +1,8 @@
-import { createAnecdote } from "../reducers/anecdoteReducer";
+import { addAnecdote as createAnecdote } from "../reduxSlices/anecdote";
+import {
+  setNotification,
+  removeNotification,
+} from "../reduxSlices/notification";
 import { useDispatch } from "react-redux";
 
 export default function AnecdoteForm() {
@@ -9,6 +13,10 @@ export default function AnecdoteForm() {
     const content = e.target.content.value;
     e.target.content.value = "";
     dispatch(createAnecdote(content));
+    dispatch(setNotification(content));
+    setTimeout(() => {
+      dispatch(removeNotification());
+    }, 5000);
   };
 
   return (
