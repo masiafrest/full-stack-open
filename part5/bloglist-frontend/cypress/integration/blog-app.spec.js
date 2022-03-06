@@ -122,9 +122,23 @@ describe("Blog app", function () {
         .parent()
         .parent()
         .as("itachiBlog");
-      cy.get("#blogs").then((blogs) => {
+      cy.get(".title").then((blogs) => {
         //iterate over blogs?
-        console.log(blogs);
+        // this map is jquery map, jquery map cb function
+        // parameter is (i, e) instead of normal js map (e, i)
+        const blogsArray = [minatoBlog, orochimaruBlog, itachiBlog];
+        const blogsTitleSorted = blogsArray
+          .sort((a, b) => {
+            if (!a.likes) return 0 - b.likes;
+            if (!b.likes) return a.likes - 0;
+            return a.likes - b.likes;
+          })
+          .map((e) => `title: ${e.title} hide`);
+        const blogsTitle = blogs.map((i, e) => e.innerText);
+        const isSame = blogsTitleSorted.every((e, i) => {
+          if (e === blogsTitle[i]) return true;
+        });
+        expect(isSame).to.be.true;
       });
     });
   });
