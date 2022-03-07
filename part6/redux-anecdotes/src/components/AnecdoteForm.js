@@ -1,34 +1,22 @@
-import { addAnecdote as createAnecdote } from "../reduxSlices/anecdote";
-import {
-  setNotification,
-  removeNotification,
-} from "../reduxSlices/notification";
+import { addAnecdote } from "../reduxSlices/anecdote";
+import anecdoteService from "../services/anecdotes";
 import { useDispatch } from "react-redux";
 
 export default function AnecdoteForm() {
   const dispatch = useDispatch();
 
-  const addAnecdote = (e) => {
-    e.preventDefault();
-    const content = e.target.content.value;
-    e.target.content.value = "";
-    dispatch(createAnecdote(content));
-    dispatch(setNotification(content));
-    setTimeout(() => {
-      dispatch(removeNotification());
-    }, 5000);
+  const addNote = async (event) => {
+    event.preventDefault();
+    const content = event.target.note.value;
+    event.target.note.value = "";
+    const newNote = await anecdoteService.createAnecdote(content);
+    dispatch(addAnecdote(newNote));
   };
 
   return (
-    <>
-      <h2>create new</h2>
-
-      <form onSubmit={addAnecdote}>
-        <div>
-          <input name="content" />
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </>
+    <form onSubmit={addNote}>
+      <input name="note" />
+      <button type="submit">add</button>
+    </form>
   );
 }
