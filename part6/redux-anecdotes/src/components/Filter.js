@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { changeFilter } from "../reduxSlices/filterSlice";
 
 export default function Filter() {
-  const [filter, setFilter] = useState("");
+  const filter = useSelector((state) => state.filter);
+  const dispatch = useDispatch();
+
   const handleChange = ({ target }) => {
-    setFilter(target.value);
+    dispatch(changeFilter(target.value));
   };
   return (
     <div>
