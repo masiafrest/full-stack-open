@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { voteAnecdote } from "../reduxSlices/anecdote";
+import { putVoteAnecdote } from "../reduxSlices/anecdote";
 
 export default function AnecdoteList() {
   const anecdotes = useSelector((state) => {
@@ -10,8 +10,12 @@ export default function AnecdoteList() {
   });
   const dispatch = useDispatch();
 
-  const vote = (id) => {
-    dispatch(voteAnecdote(id));
+  const vote = (anecdote) => {
+    const newAnecdote = {
+      ...anecdote,
+      votes: anecdote.votes + 1,
+    };
+    dispatch(putVoteAnecdote(newAnecdote));
   };
 
   return anecdotes.map((anecdote) => (
@@ -19,7 +23,7 @@ export default function AnecdoteList() {
       <div>{anecdote.content}</div>
       <div>
         has {anecdote.votes}
-        <button onClick={() => vote(anecdote.id)}>vote</button>
+        <button onClick={() => vote(anecdote)}>vote</button>
       </div>
     </div>
   ));
