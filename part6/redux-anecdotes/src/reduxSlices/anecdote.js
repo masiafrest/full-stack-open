@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import anecdoteService from "../services/anecdotes";
+import { setNoti } from "./notification";
 
 const anecdotesAtStart = [
   "If it hurts, do it more often",
@@ -57,6 +58,7 @@ export const createAnecdote = (content) => {
   return async (dispatch) => {
     const anecdote = await anecdoteService.createAnecdote(content);
     dispatch(appendAnecdote(anecdote));
+    dispatch(setNoti(anecdote.content, 5000));
   };
 };
 
