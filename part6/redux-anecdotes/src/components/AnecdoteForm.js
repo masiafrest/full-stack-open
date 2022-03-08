@@ -1,14 +1,16 @@
 import { createAnecdote } from "../reduxSlices/anecdote";
-import { useDispatch } from "react-redux";
+//import { useDispatch } from "react-redux";
+import { connect } from "react-redux";
 
-export default function AnecdoteForm() {
-  const dispatch = useDispatch();
+function AnecdoteForm(props) {
+  //const dispatch = useDispatch();
 
   const addAnecdote = async (event) => {
     event.preventDefault();
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
-    dispatch(createAnecdote(content));
+    //dispatch(createAnecdote(content));
+    props.createAnecdote(content);
   };
 
   return (
@@ -18,3 +20,14 @@ export default function AnecdoteForm() {
     </form>
   );
 }
+
+const mapStateToProps = (state) => ({});
+const mapDispatchToProps = {
+  createAnecdote,
+};
+const ConnectedAnecdoteForm = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AnecdoteForm);
+
+export default ConnectedAnecdoteForm;
