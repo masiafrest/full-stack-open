@@ -69,6 +69,9 @@ export const putVoteAnecdote = (anecdote) => {
       anecdote
     );
     dispatch(voteAnecdote(responseData));
+    dispatch(
+      setNoti(`${anecdote.content} has ${anecdote.votes} votes now!!`, 5000)
+    );
   };
 };
 
