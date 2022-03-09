@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import blogService from "../services/blogs";
+import { setNotification } from "./notificationSlice";
 
 const user = createSlice({
   name: "blogs",
@@ -37,13 +38,23 @@ export const initialBlogs = () => async (dispatch) => {
 };
 
 export const createBlog = (blogObj) => async (dispatch) => {
-  const blog = await blogService.create(blogObj);
-  dispatch(appendBlog(blog));
+  try {
+    const blog = await blogService.create(blogObj);
+    dispatch(appendBlog(blog));
+    dispatch(setNotification(`added title: ${blogObj.title}`, 5000));
+  } catch (error) {
+    setNotification(error.message, 5000, true);
+  }
 };
 
 export const incrementLike = (id) => async (dispatch) => {
-  const updatedBlog = await blogService.likeABlog(id);
-  dispatch(likeABlog(updatedBlog));
+  try {
+    const updatedBlog = await blogService.likeABlog(id);
+    dispatch(likeABlog(updatedBlog));
+    dispatch(setNotification(`voted title: ${updatedBlog.title}`));
+  } catch (error) {
+    dispatch(setNotification("no estas autorizado", 5000, true));
+  }
 };
 
 export const delBlog = (id) => async (dispatch) => {

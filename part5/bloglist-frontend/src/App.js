@@ -1,11 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createBlog } from "./redux/blogSlice";
-import {
-  setNotificationError,
-  setNotificationSuccess,
-  removeNotification,
-} from "./redux/notificationSlice";
+import { setNotification } from "./redux/notificationSlice";
 
 import Blogs from "./components/Blogs";
 import Login from "./components/Login";
@@ -13,19 +9,16 @@ import CreateNewBlog from "./components/CreateNewBlog";
 import blogService from "./services/blogs";
 import Notification from "./components/Notification";
 import Showable from "./components/Showable";
+import { removeUser } from "./redux/userSlice";
 
 const App = () => {
   const dispatch = useDispatch();
-  const { blogs, notification } = useSelector((state) => state);
+  const { blogs, notification, user } = useSelector((state) => state);
 
-  const [user, setUser] = useState(null);
   const blogFormRef = useRef();
 
   useEffect(() => {
-    const loggedUserJson = window.localStorage.getItem("loggedBlogappUser");
-    if (loggedUserJson) {
-      const user = JSON.parse(loggedUserJson);
-      setUser(user);
+    if (user) {
       blogService.setNewToken(user.token);
     }
   }, []);
@@ -34,22 +27,16 @@ const App = () => {
     try {
       blogFormRef.current.toggleVisibility();
       dispatch(createBlog(blogObj));
-      dispatch(setNotificationSuccess(`added title: ${blogObj.title}`));
-      setTimeout(() => {
-        dispatch(removeNotification());
-      }, 5000);
+      dispatch(setNotification(`added title: ${blogObj.title}`));
     } catch (error) {
-      setNotificationError(error.message);
-      setTimeout(() => {
-        dispatch(removeNotification());
-      }, 5000);
+      dispatch(setNotification(error.message, 5000, true));
     }
   };
 
   return (
     <>
       {notification && <Notification message={notification} />}
-      {user === null && <Login setUser={setUser} />}
+      {user === null && <Login />}
       <>
         <h2>blogs</h2>
         {user !== null && (
@@ -57,8 +44,7 @@ const App = () => {
             {user.name} is logged in
             <button
               onClick={() => {
-                window.localStorage.clear();
-                setUser(null);
+                dispatch(removeUser());
               }}
             >
               logout
