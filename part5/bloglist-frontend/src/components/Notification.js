@@ -1,4 +1,7 @@
-export default function Notifications({ message }) {
+import { useSelector } from "react-redux";
+
+export default function Notifications() {
+  const notification = useSelector((state) => state.notification);
   const errorStyle = {
     border: "1px solid red",
     color: "red",
@@ -7,9 +10,11 @@ export default function Notifications({ message }) {
     border: "1px solid black",
   };
 
-  const isError = message?.error;
+  const isError = notification?.error;
 
   return (
-    <div style={isError ? errorStyle : successStyle}>{message?.message}</div>
+    <div style={isError ? errorStyle : successStyle}>
+      {notification?.message}
+    </div>
   );
 }

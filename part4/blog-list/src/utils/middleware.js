@@ -32,6 +32,7 @@ const errorHandler = (error, req, res, next) => {
 
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get("Authorization");
+  console.log("tokenExtractor: ", authorization);
   let token = null;
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
     token = authorization.substring(7);
@@ -42,6 +43,7 @@ const tokenExtractor = (req, res, next) => {
 
 const userExtractor = (req, res, next) => {
   const decodedToken = jwt.verify(req.token, process.env.SECRET);
+  console.log("userExtractor: ", decodedToken);
   if (!decodedToken) {
     res.status(401).json({ error: "token missing or invalid" });
   }

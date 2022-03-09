@@ -21,6 +21,11 @@ const create = async (newObj) => {
   return response.data;
 };
 
+const likeABlog = async (id) => {
+  const res = await axios.get(`${baseUrl}/like/${id}`, config);
+  return res.data;
+};
+
 const put = async (id, newObj) => {
   const response = await axios.put(`${baseUrl}/${id}`, newObj, config);
   return response.data;
@@ -31,4 +36,4 @@ const deleteBlog = async (id) => {
   return response.data;
 };
 
-export default { setNewToken, getAll, create, put, deleteBlog };
+export default { setNewToken, getAll, create, put, deleteBlog, likeABlog };

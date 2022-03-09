@@ -1,51 +1,38 @@
 import { useEffect } from "react";
-import blogService from "../services/blogs";
+import { useDispatch } from "react-redux";
+import { initialBlogs, incrementLike, delBlog } from "../redux/blogSlice";
 import Blog from "./Blog";
 
-const Blogs = ({ blogsState }) => {
-  const [blogs, setBlogs] = blogsState;
+const Blogs = ({ blogs }) => {
+  const dispatch = useDispatch();
+  // const [blogs, setBlogs] = blogsState;
 
   useEffect(async () => {
-    const data = await blogService.getAll();
-    setBlogs(data);
+    // const data = await blogService.getAll();
+    // setBlogs(data);
+    dispatch(initialBlogs());
   }, []);
 
   const handleLike = (blog) => {
-    const newObj = { likes: blog.likes + 1 };
-    blogService.put(blog.id, newObj);
-    setBlogs((prevBlogs) =>
-      prevBlogs.map((pblog) => {
-        if (pblog.id === blog.id) {
-          return {
-            ...pblog,
-            ...newObj,
-          };
-        }
-        return pblog;
-      })
-    );
+    dispatch(incrementLike(blog.id));
   };
   const handleDel = (blog) => {
     const ans = window.confirm(`Remove ${blog.title} ?`);
     if (ans) {
-      blogService.deleteBlog(blog.id);
-      setBlogs((prevBlogs) =>
-        prevBlogs.filter((pBlog) => pBlog.id !== blog.id)
-      );
+      dispatch(delBlog(blog.id));
     }
   };
+  const sortedBlogs = [...blogs].sort((a, b) => a.likes - b.likes);
   return (
     <section id="blogs">
-      {blogs
-        .sort((a, b) => a.likes - b.likes)
-        .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            handleDel={handleDel}
-            handleLike={handleLike}
-          />
-        ))}
+      {sortedBlogs.map((blog) => (
+        <Blog
+          key={blog.id}
+          blog={blog}
+          handleDel={handleDel}
+          handleLike={handleLike}
+        />
+      ))}
     </section>
   );
 };

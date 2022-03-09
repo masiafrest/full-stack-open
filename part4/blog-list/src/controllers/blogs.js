@@ -27,6 +27,7 @@ blogsRouter.get("/:id", async (request, response, next) => {
     next(err);
   }
 });
+
 blogsRouter.post(
   "/",
   tokenExtractor,
@@ -53,6 +54,26 @@ blogsRouter.post(
   }
 );
 
+blogsRouter.get(
+  "/like/:id",
+  tokenExtractor,
+  userExtractor,
+  async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const blog = await Blog.findByIdAndUpdate(
+        id,
+        { $inc: { likes: 1 } },
+        { new: true }
+      );
+
+      res.json(blog);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 blogsRouter.delete(
   "/:id",
   tokenExtractor,
@@ -61,9 +82,7 @@ blogsRouter.delete(
     try {
       const id = request.params.id;
       const blog = await Blog.findById(id);
-      console.log(blog._id.toString() === id);
       if (blog._id.toString() === id) {
-        console.log("deleting....");
         await Blog.findByIdAndRemove(id);
         return response.status(204).end();
       }

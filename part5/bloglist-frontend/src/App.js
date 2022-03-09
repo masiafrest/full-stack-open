@@ -1,4 +1,12 @@
 import { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { createBlog } from "./redux/blogSlice";
+import {
+  setNotificationError,
+  setNotificationSuccess,
+  removeNotification,
+} from "./redux/notificationSlice";
+
 import Blogs from "./components/Blogs";
 import Login from "./components/Login";
 import CreateNewBlog from "./components/CreateNewBlog";
@@ -7,9 +15,10 @@ import Notification from "./components/Notification";
 import Showable from "./components/Showable";
 
 const App = () => {
+  const dispatch = useDispatch();
+  const { blogs, notification } = useSelector((state) => state);
+
   const [user, setUser] = useState(null);
-  const [blogs, setBlogs] = useState([]);
-  const [notification, setNotification] = useState(null);
   const blogFormRef = useRef();
 
   useEffect(() => {
@@ -24,19 +33,15 @@ const App = () => {
   const addBlog = async (blogObj) => {
     try {
       blogFormRef.current.toggleVisibility();
-      const responseData = await blogService.create(blogObj);
-      setBlogs((prevBlogs) => [...prevBlogs, responseData]);
-      setNotification({
-        error: false,
-        message: `added title: ${blogObj.title}`,
-      });
+      dispatch(createBlog(blogObj));
+      dispatch(setNotificationSuccess(`added title: ${blogObj.title}`));
       setTimeout(() => {
-        setNotification(null);
+        dispatch(removeNotification());
       }, 5000);
     } catch (error) {
-      setNotification({ error: true, message: error.message });
+      setNotificationError(error.message);
       setTimeout(() => {
-        setNotification(null);
+        dispatch(removeNotification());
       }, 5000);
     }
   };
@@ -44,9 +49,7 @@ const App = () => {
   return (
     <>
       {notification && <Notification message={notification} />}
-      {user === null && (
-        <Login setUser={setUser} setNotification={setNotification} />
-      )}
+      {user === null && <Login setUser={setUser} />}
       <>
         <h2>blogs</h2>
         {user !== null && (
@@ -65,7 +68,7 @@ const App = () => {
         <Showable label="create new blog" ref={blogFormRef}>
           <CreateNewBlog addBlog={addBlog} />
         </Showable>
-        <Blogs blogsState={[blogs, setBlogs]} />
+        <Blogs blogs={blogs} />
       </>
       )
     </>
