@@ -25,6 +25,13 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+userSchema.virtual("blogsCount", {
+  ref: "Blog",
+  localField: "_id",
+  foreignField: "user",
+  count: true,
+});
+
 userSchema.set("toJSON", {
   transform: (doc, returnedObj) => {
     returnedObj.id = returnedObj._id.toString();

@@ -1,0 +1,45 @@
+@baseurl = http://localhost:3001/api
+@username = "12345"
+@password = "12345"
+
+###
+# @name addUser
+POST {{baseurl}}/users/
+Content-Type: application/json
+
+{
+  "username": {{username}}, 
+  "password": {{password}} 
+  "name": {{username}}
+}
+
+###
+
+# @name login
+POST {{baseurl}}/login/
+Content-Type: application/json
+
+{
+  "username": {{username}}, 
+  "password": {{password}} 
+}
+
+###
+
+@token = {{login.response.body.token}} 
+
+POST http://localhost:3001/api/blogs/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "hi",
+ "url": "hello",
+  "author": "auth",
+  "likes": "555"
+}
+
+###
+# @name blogCount
+GET {{baseurl}}/users/blog-count/
+Content-Type: application/json

@@ -22,8 +22,9 @@ loginRouter.post("/", async (req, res, next) => {
       id: user._id,
     };
 
+    const isDevelopment = process.NODE_ENV === "development";
     const token = jwt.sign(userForToken, process.env.SECRET, {
-      // expiresIn: 60 * 60,
+      expiresIn: isDevelopment ? undefined : 60 * 60,
     });
     res.status(200).send({ token, username: user.username, name: user.name });
   } catch (error) {

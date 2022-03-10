@@ -49,4 +49,9 @@ usersRouter.post(
   }
 );
 
+usersRouter.get("/blog-count/", async (req, res, next) => {
+  const data = await User.find({}).populate("blogsCount");
+  res.json(data);
+});
+
 module.exports = usersRouter;
