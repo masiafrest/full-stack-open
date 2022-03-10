@@ -2,7 +2,9 @@ import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createBlog } from "./redux/blogSlice";
 import { setNotification } from "./redux/notificationSlice";
+import { Routes, Route } from "react-router-dom";
 
+import NavBar from "./components/NavBar";
 import Blogs from "./components/Blogs";
 import Login from "./components/Login";
 import CreateNewBlog from "./components/CreateNewBlog";
@@ -10,6 +12,15 @@ import blogService from "./services/blogs";
 import Notification from "./components/Notification";
 import Showable from "./components/Showable";
 import { removeUser } from "./redux/userSlice";
+import Users from "./components/Users";
+
+const UserStatus = ({ user, onClick }) =>
+  user !== null && (
+    <div>
+      {user.name} is logged in
+      <button onClick={onClick}>logout</button>
+    </div>
+  );
 
 const App = () => {
   const dispatch = useDispatch();
@@ -35,22 +46,22 @@ const App = () => {
 
   return (
     <>
+      <NavBar />
       {notification && <Notification message={notification} />}
       {user === null && <Login />}
       <>
         <h2>blogs</h2>
-        {user !== null && (
-          <div>
-            {user.name} is logged in
-            <button
-              onClick={() => {
-                dispatch(removeUser());
-              }}
-            >
-              logout
-            </button>
-          </div>
-        )}
+        <UserStatus
+          user={user}
+          onClick={() => {
+            dispatch(removeUser());
+          }}
+        />
+        <Routes>
+          <Route path="/users" element={<Users />} />
+          <Route path="/blogs" element={null} />
+        </Routes>
+
         <Showable label="create new blog" ref={blogFormRef}>
           <CreateNewBlog addBlog={addBlog} />
         </Showable>

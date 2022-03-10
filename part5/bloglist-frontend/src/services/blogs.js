@@ -36,4 +36,17 @@ const deleteBlog = async (id) => {
   return response.data;
 };
 
-export default { setNewToken, getAll, create, put, deleteBlog, likeABlog };
+const getBlogsCountByUser = async () => {
+  const res = await axios.get("/api/users/blog-count", config);
+  return res.data;
+};
+
+export default {
+  setNewToken,
+  getAll,
+  create,
+  put,
+  deleteBlog,
+  likeABlog,
+  getBlogsCountByUser,
+};
