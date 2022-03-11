@@ -2,11 +2,9 @@ import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createBlog } from "./redux/blogSlice";
 import { setNotification } from "./redux/notificationSlice";
-import { removeUser } from "./redux/userSlice";
 import { Routes, Route } from "react-router-dom";
 
 import NavBar from "./components/NavBar";
-import Login from "./components/Login";
 import CreateNewBlog from "./components/CreateNewBlog";
 import blogService from "./services/blogs";
 import Notification from "./components/Notification";
@@ -15,14 +13,7 @@ import Users from "./components/Users";
 import User from "./components/User";
 import Blogs from "./components/Blogs";
 import Blog from "./components/Blog";
-
-const UserStatus = ({ user, onClick }) =>
-  user !== null && (
-    <div>
-      {user.name} is logged in
-      <button onClick={onClick}>logout</button>
-    </div>
-  );
+import Login from "./components/Login";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -48,17 +39,11 @@ const App = () => {
 
   return (
     <>
-      <NavBar />
-      <h2>blogs</h2>
       {notification && <Notification message={notification} />}
-      {user === null && <Login />}
+      <NavBar user={user} />
+      <h2>blogs</h2>
       <>
-        <UserStatus
-          user={user}
-          onClick={() => {
-            dispatch(removeUser());
-          }}
-        />
+        {user === null && <Login />}
         <Showable label="create new blog" ref={blogFormRef}>
           <CreateNewBlog addBlog={addBlog} />
         </Showable>
