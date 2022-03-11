@@ -5,7 +5,7 @@ export default function NavBar() {
     <ul style={{ listStyleType: "none", margin: 0, padding: 0 }}>
       <li>
         <Link to="/users">users</Link>
-        <Link to="/blogs">blogs</Link>
+        <Link to="/">blogs</Link>
       </li>
     </ul>
   );

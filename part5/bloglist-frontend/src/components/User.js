@@ -8,7 +8,6 @@ export default function User() {
 
   useEffect(async () => {
     const blogs = await userService.getUser(userMatch.params.id);
-    console.log("blogs0 blog", blogs);
     setUserBlogs(blogs);
   }, []);
 

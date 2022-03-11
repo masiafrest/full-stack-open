@@ -1,36 +1,31 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useMatch } from "react-router-dom";
+import { incrementLike } from "../redux/blogSlice";
 
-const Blog = ({ blog, handleLike, handleDel }) => {
-  const [visible, setVisible] = useState(false);
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
+const Blog = () => {
+  const dispatch = useDispatch;
+  const blogs = useSelector((state) => state.blogs);
+  const blogMatch = useMatch("/blogs/:id");
+  const blog = blogMatch
+    ? blogs.find((blog) => {
+        return blog.id === blogMatch.params.id;
+      })
+    : null;
+  const handleLike = (blog) => {
+    dispatch(incrementLike(blog.id));
   };
 
-  const handleVisible = () => {
-    setVisible(!visible);
-  };
-
-  const btnLabel = visible ? "hide" : "view";
   return (
-    <div style={blogStyle} id="blog">
-      <div className="title">
-        title: {blog.title} <button onClick={handleVisible}>{btnLabel}</button>
-      </div>
-      {visible && (
-        <>
-          <div>url: {blog.url}</div>
-          <div id="likes">
-            likes: {blog.likes}
-            <button onClick={() => handleLike(blog)}>like</button>
-          </div>
-          <div>author: {blog.author}</div>
-          <button onClick={() => handleDel(blog)}>delete</button>
-        </>
-      )}
+    <div id="blog">
+      <h2>{blog.title}</h2>
+      <>
+        <a href={blog.url}>{blog.url}</a>
+        <div id="likes">
+          likes: {blog.likes}
+          <button onClick={() => handleLike(blog)}>like</button>
+        </div>
+        <div>added by {blog.author}</div>
+      </>
     </div>
   );
 };

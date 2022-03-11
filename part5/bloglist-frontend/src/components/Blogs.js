@@ -1,37 +1,42 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { initialBlogs, incrementLike, delBlog } from "../redux/blogSlice";
-import Blog from "./Blog";
+import { Link } from "react-router-dom";
+import { initialBlogs, delBlog } from "../redux/blogSlice";
 
 const Blogs = ({ blogs }) => {
   const dispatch = useDispatch();
-  // const [blogs, setBlogs] = blogsState;
+  const linkStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: "solid",
+    borderWidth: 1,
+    marginBottom: 5,
+  };
 
   useEffect(async () => {
-    // const data = await blogService.getAll();
-    // setBlogs(data);
     dispatch(initialBlogs());
   }, []);
-
-  const handleLike = (blog) => {
-    dispatch(incrementLike(blog.id));
-  };
   const handleDel = (blog) => {
     const ans = window.confirm(`Remove ${blog.title} ?`);
     if (ans) {
       dispatch(delBlog(blog.id));
     }
   };
+
   const sortedBlogs = [...blogs].sort((a, b) => a.likes - b.likes);
   return (
     <section id="blogs">
       {sortedBlogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          handleDel={handleDel}
-          handleLike={handleLike}
-        />
+        <div key={blog.id} style={linkStyle}>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          <button onClick={() => handleDel(blog)}>delete</button>
+        </div>
+        // <Blog
+        //   key={blog.id}
+        //   blog={blog}
+        //   handleDel={handleDel}
+        //   handleLike={handleLike}
+        // />
       ))}
     </section>
   );
