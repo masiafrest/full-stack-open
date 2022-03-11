@@ -13,6 +13,7 @@ import Notification from "./components/Notification";
 import Showable from "./components/Showable";
 import { removeUser } from "./redux/userSlice";
 import Users from "./components/Users";
+import User from "./components/User";
 
 const UserStatus = ({ user, onClick }) =>
   user !== null && (
@@ -58,6 +59,7 @@ const App = () => {
           }}
         />
         <Routes>
+          <Route path="/users/:id" element={<User />} />
           <Route path="/users" element={<Users />} />
           <Route path="/blogs" element={null} />
         </Routes>

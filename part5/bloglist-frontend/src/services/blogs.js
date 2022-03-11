@@ -2,7 +2,7 @@ import axios from "axios";
 const baseUrl = "/api/blogs";
 
 let token = null;
-const config = {
+export const config = {
   headers: { Authorization: "" },
 };
 
@@ -37,7 +37,7 @@ const deleteBlog = async (id) => {
 };
 
 const getBlogsCountByUser = async () => {
-  const res = await axios.get("/api/users/blog-count", config);
+  const res = await axios.get(`${baseUrl}/blog-count`, config);
   return res.data;
 };
 

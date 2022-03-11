@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
 userSchema.virtual("blogsCount", {
   ref: "Blog",
   localField: "_id",
-  foreignField: "user",
+  foreignField: "user.id",
   count: true,
 });
 

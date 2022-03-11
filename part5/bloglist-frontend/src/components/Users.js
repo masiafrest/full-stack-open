@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import blogService from "../services/blogs";
 
 export default function Users() {
@@ -21,7 +22,9 @@ export default function Users() {
         <tbody>
           {blogsCount.map((e) => (
             <tr key={e.id}>
-              <td>{e.username}</td>
+              <td>
+                <Link to={`/users/${e.id}`}>{e.username}</Link>
+              </td>
               <td>{e.blogs.length}</td>
             </tr>
           ))}

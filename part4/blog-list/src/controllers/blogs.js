@@ -15,6 +15,15 @@ blogsRouter.get("/", async (request, response, next) => {
   }
 });
 
+blogsRouter.get("/blog-count/", async (req, res, next) => {
+  try {
+    const data = await User.find({}).populate("blogsCount");
+    res.json(data);
+  } catch (error) {
+    next(error);
+  }
+});
+
 blogsRouter.get("/:id", async (request, response, next) => {
   try {
     const blogs = await Blog.findById(request.params.id);
