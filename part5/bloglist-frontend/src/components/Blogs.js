@@ -31,12 +31,6 @@ const Blogs = ({ blogs }) => {
           <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
           <button onClick={() => handleDel(blog)}>delete</button>
         </div>
-        // <Blog
-        //   key={blog.id}
-        //   blog={blog}
-        //   handleDel={handleDel}
-        //   handleLike={handleLike}
-        // />
       ))}
     </section>
   );

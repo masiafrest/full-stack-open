@@ -27,10 +27,20 @@ const user = createSlice({
     filterABlog(state, action) {
       return state.filter((blog) => blog.id !== action.payload);
     },
+    appendComment(state, action) {
+      state.map((e) => {
+        console.log(e, action.payload);
+        if (e.id === action.payload.blog) {
+          e.comments.push(action.payload);
+        }
+        return e;
+      });
+    },
   },
 });
 
-export const { setBlogs, appendBlog, likeABlog, filterABlog } = user.actions;
+export const { setBlogs, appendBlog, likeABlog, filterABlog, appendComment } =
+  user.actions;
 
 export const initialBlogs = () => async (dispatch) => {
   const blogs = await blogService.getAll();
@@ -60,6 +70,12 @@ export const incrementLike = (id) => async (dispatch) => {
 export const delBlog = (id) => async (dispatch) => {
   await blogService.deleteBlog(id);
   dispatch(filterABlog(id));
+};
+
+export const createComment = (id, comment) => async (dispatch) => {
+  const newComment = await blogService.addComment(id, comment);
+  console.log("newComment", newComment);
+  dispatch(appendComment(newComment));
 };
 
 export default user.reducer;

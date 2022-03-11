@@ -1,5 +1,6 @@
 
 @username =  622958da21037923e57fce1a
+@blogid = 6228ecd22c9927442f0b0930
 
 ###
 
@@ -8,7 +9,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3001/api/blogs/{{username}}
+GET http://localhost:3001/api/blogs/{{blogid}}
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvbmFuIiwiaWQiOiI2MjFmYzljNWNkYjI5OTBiMWE0MGUzNTEiLCJpYXQiOjE2NDYyNTg2MDV9.t5Ph8Q8kX8xzvt3N06N8RmD5tbw4WQnhoq0vDvoTTXY
 
@@ -44,4 +45,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb
 {
   "likes": "2"
 }
+
+
 

@@ -41,6 +41,15 @@ const getBlogsCountByUser = async () => {
   return res.data;
 };
 
+const addComment = async (blogId, comment) => {
+  const res = await axios.post(
+    `${baseUrl}/${blogId}/comments`,
+    { comment },
+    config
+  );
+  return res.data;
+};
+
 export default {
   setNewToken,
   getAll,
@@ -49,4 +58,5 @@ export default {
   deleteBlog,
   likeABlog,
   getBlogsCountByUser,
+  addComment,
 };
