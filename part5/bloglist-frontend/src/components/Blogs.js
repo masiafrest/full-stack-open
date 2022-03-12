@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { initialBlogs, delBlog } from "../redux/blogSlice";
+import { Button } from "@chakra-ui/react";
 
 const Blogs = ({ blogs }) => {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ const Blogs = ({ blogs }) => {
       {sortedBlogs.map((blog) => (
         <div key={blog.id} style={linkStyle}>
           <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-          <button onClick={() => handleDel(blog)}>delete</button>
+          <Button onClick={() => handleDel(blog)}>delete</Button>
         </div>
       ))}
     </section>

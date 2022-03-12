@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import blogService from "../services/blogs";
 
+import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
+
 export default function Users() {
   const [blogsCount, setBlogsCount] = useState([]);
   useEffect(async () => {
@@ -12,24 +14,24 @@ export default function Users() {
   return (
     <>
       <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>blogs created</th>
-          </tr>
-        </thead>
-        <tbody>
+      <Table>
+        <Thead>
+          <Tr>
+            <Th></Th>
+            <Th>blogs created</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
           {blogsCount.map((e) => (
-            <tr key={e.id}>
-              <td>
+            <Tr key={e.id}>
+              <Td>
                 <Link to={`/users/${e.id}`}>{e.username}</Link>
-              </td>
-              <td>{e.blogs.length}</td>
-            </tr>
+              </Td>
+              <Td>{e.blogs.length}</Td>
+            </Tr>
           ))}
-        </tbody>
-      </table>
+        </Tbody>
+      </Table>
     </>
   );
 }

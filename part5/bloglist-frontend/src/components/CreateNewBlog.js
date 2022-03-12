@@ -1,4 +1,12 @@
 import { useState } from "react";
+import {
+  FormControl,
+  FormLabel,
+  // FormErrorMessage,
+  // FormHelperText,
+  Input,
+  Button,
+} from "@chakra-ui/react";
 
 export default function CreateNewBlog({ addBlog }) {
   const initialState = {
@@ -9,7 +17,7 @@ export default function CreateNewBlog({ addBlog }) {
   const [form, setForm] = useState(initialState);
 
   const handleChange = ({ target }) => {
-    setForm((prevForm) => ({ ...prevForm, [target.name]: target.value }));
+    setForm((prevForm) => ({ ...prevForm, [target.id]: target.value }));
   };
 
   const handleSubmit = (e) => {
@@ -21,34 +29,36 @@ export default function CreateNewBlog({ addBlog }) {
     <>
       <h1>Create new </h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          title:{" "}
-          <input
-            name="title"
+        <FormControl>
+          <FormLabel htmlFor="title">Title</FormLabel>
+          <Input
+            id="title"
             value={form.title}
             onChange={handleChange}
             placeholder="add title"
           />
-        </div>
-        <div>
-          author:{" "}
-          <input
-            name="author"
-            placeholder="add author"
+        </FormControl>
+        <FormControl>
+          <FormLabel htmlFor="author">Author</FormLabel>
+          <Input
+            id="author"
             value={form.author}
             onChange={handleChange}
+            placeholder="add author"
           />
-        </div>
-        <div>
-          url:{" "}
-          <input
-            name="url"
-            placeholder="add url"
+        </FormControl>
+        <FormControl>
+          <FormLabel htmlFor="url">Url</FormLabel>
+          <Input
+            id="url"
             value={form.url}
             onChange={handleChange}
+            placeholder="add url"
           />
-        </div>
-        <button type="submit">save</button>
+        </FormControl>
+        <Button type="submit" colorScheme="blue">
+          save
+        </Button>
       </form>
     </>
   );
