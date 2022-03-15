@@ -15,6 +15,8 @@ import Blogs from "./components/Blogs";
 import Blog from "./components/Blog";
 import Login from "./components/Login";
 
+import { Container, Divider } from "@chakra-ui/react";
+
 const App = () => {
   const dispatch = useDispatch();
   const { blogs, notification, user } = useSelector((state) => state);
@@ -41,19 +43,21 @@ const App = () => {
     <>
       {notification && <Notification message={notification} />}
       <NavBar user={user} />
-      <h2>blogs</h2>
-      <>
+      <Container>
+        <h1>blogs</h1>
+        <Divider m="2" />
         {user === null && <Login />}
         <Showable label="create new blog" ref={blogFormRef}>
           <CreateNewBlog addBlog={addBlog} />
         </Showable>
+        <Divider m="2" />
         <Routes>
           <Route path="/users/:id" element={<User />} />
           <Route path="/users" element={<Users />} />
           <Route path="/blogs/:id" element={<Blog />} />
           <Route path="/" element={<Blogs blogs={blogs} />} />
         </Routes>
-      </>
+      </Container>
     </>
   );
 };

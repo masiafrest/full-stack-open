@@ -1,5 +1,6 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
 import PropTypes from "prop-types";
+import { Button } from "@chakra-ui/react";
 
 const Showable = forwardRef(({ label, children }, ref) => {
   const [visible, setVisible] = useState(false);
@@ -17,11 +18,11 @@ const Showable = forwardRef(({ label, children }, ref) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{label}</button>
+        <Button onClick={toggleVisibility}>{label}</Button>
       </div>
       <div style={showWhenVisible}>
         {children}
-        <button onClick={toggleVisibility}>cancel</button>
+        <Button onClick={toggleVisibility}>cancel</Button>
       </div>
     </div>
   );

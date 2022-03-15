@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../redux/userSlice";
+import {
+  FormControl,
+  FormLabel,
+  // FormErrorMessage,
+  // FormHelperText,
+  Input,
+  Button,
+} from "@chakra-ui/react";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -8,7 +16,7 @@ const Login = () => {
   const [form, setForm] = useState(initialState);
 
   const handleChange = ({ target }) => {
-    setForm((prevForm) => ({ ...prevForm, [target.name]: target.value }));
+    setForm((prevForm) => ({ ...prevForm, [target.id]: target.value }));
   };
 
   const handleLogin = (e) => {
@@ -20,14 +28,25 @@ const Login = () => {
     <>
       <h1>log in to application</h1>
       <form onSubmit={handleLogin}>
-        <div>
-          username <input name="username" onChange={handleChange} />
-        </div>
-        <div>
-          password{" "}
-          <input name="password" type="password" onChange={handleChange} />
-        </div>
-        <button type="submit">login</button>
+        <FormControl>
+          <FormLabel htmlFor="username">username</FormLabel>
+          <Input
+            id="username"
+            value={form.username}
+            onChange={handleChange}
+            placeholder="add username"
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel htmlFor="password">password</FormLabel>
+          <Input
+            id="password"
+            value={form.password}
+            onChange={handleChange}
+            placeholder="add password"
+          />
+        </FormControl>
+        <Button type="submit">login</Button>
       </form>
     </>
   );
