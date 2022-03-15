@@ -89,18 +89,24 @@ const typeDefs = gql`
     bookCount: Int
     authorCount: Int
     allBooks(author: String, genre: String): [Book]
-    allAuthors: [allAuthors]
+    allAuthors: [Author]
   }
 
-  type allAuthors {
-    name: String
-    bookCount: Int
+  type Mutation {
+    addBook(
+      title: String
+      author: String
+      published: Int
+      genres: [String]
+    ): Book
+    editAuthor(name: String, setBornTo: Int): Author
   }
 
   type Author {
     name: String
     id: ID
     born: Int
+    bookCount: Int
   }
 
   type Book {
@@ -113,11 +119,35 @@ const typeDefs = gql`
 `;
 
 const resolvers = {
+  Mutation: {
+    addBook: (_, args) => {
+      const haveAuthor = authors.some((author) => author.name === args.author);
+      if (!haveAuthor) {
+        authors.push({ name: args.author, born: null, id: args.author });
+      }
+      const newBook = { ...args, id: args.title };
+      books.push(newBook);
+      return newBook;
+    },
+    editAuthor: (_, args) => {
+      const { name, setBornTo } = args;
+      let editAuthor = null;
+      for (const author of authors) {
+        if (author.name === name) {
+          author.born = setBornTo;
+          editAuthor = author;
+          break;
+        }
+      }
+      return editAuthor;
+    },
+  },
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: (_, args) => {
       const { author, genre } = args;
+      if (!author && !genre) return books;
       if (author && genre) {
         return books
           .filter(
@@ -140,17 +170,11 @@ const resolvers = {
           }
         });
     },
-    allAuthors: () => {
-      return authors.map((author) => {
-        let bookCount = 0;
-        books.forEach((book) => {
-          if (author.name === book.author) {
-            bookCount++;
-          }
-        });
-        author.bookCount = bookCount;
-        return author;
-      });
+    allAuthors: () => authors,
+  },
+  Author: {
+    bookCount: (root, args) => {
+      return books.filter((book) => book.author === root.name).length;
     },
   },
 };
