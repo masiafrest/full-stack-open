@@ -4,9 +4,13 @@ import { EDIT_AUTHOR } from "../queries";
 
 export default function SetBirthyear() {
   const [name, setName] = useState("");
-  const [born, setBorn] = useState(null);
+  const [born, setBorn] = useState(1900);
 
   const [editAuthor] = useMutation(EDIT_AUTHOR);
+  const years = [];
+  for (let i = 1900; i < 2000; i++) {
+    years.push(i);
+  }
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -30,11 +34,22 @@ export default function SetBirthyear() {
         </div>
         <div>
           born
-          <input
+          <select
             type="number"
-            onChange={({ target }) => setBorn(target.value)}
+            onChange={({ target }) => {
+              console.log(target);
+              setBorn(target.value);
+            }}
             value={born}
-          />
+          >
+            {years.map((year, idx) => {
+              return (
+                <option key={year} value={year} selected={idx === 0}>
+                  {year}
+                </option>
+              );
+            })}
+          </select>
         </div>
         <button type="submit">update author</button>
       </form>
