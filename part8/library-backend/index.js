@@ -1,5 +1,20 @@
-const { ApolloServer, gql } = require("apollo-server");
+require("dotenv").config();
+const { ApolloServer, gql, UserInputError } = require("apollo-server");
 const { authors, books } = require("./mockData");
+const mongoose = require("mongoose");
+const Book = require("./models/Book");
+const Author = require("./models/Author");
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => {
+    console.log("connected a mongodb");
+  })
+  .catch((error) => {
+    console.log("error connection to MongoDB:", error.message);
+  });
 
 const typeDefs = gql`
   type Query {
@@ -10,6 +25,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    deleteAll: Boolean
     addBook(
       title: String
       author: String
@@ -27,67 +43,61 @@ const typeDefs = gql`
   }
 
   type Book {
-    id: ID
-    title: String
-    author: String
-    published: Int
-    genres: [String]
+    id: ID!
+    title: String!
+    author: Author
+    published: Int!
+    genres: [String!]!
   }
 `;
 
 const resolvers = {
   Mutation: {
-    addBook: (_, args) => {
-      const haveAuthor = authors.some((author) => author.name === args.author);
-      if (!haveAuthor) {
-        authors.push({ name: args.author, born: null, id: args.author });
-      }
-      const newBook = { ...args, id: args.title };
-      books.push(newBook);
-      return newBook;
+    deleteAll: async () => {
+      await Book.deleteMany({});
+      await Author.deleteMany({});
+      return true;
     },
-    editAuthor: (_, args) => {
-      const { name, setBornTo } = args;
-      let editAuthor = null;
-      for (const author of authors) {
-        if (author.name === name) {
-          author.born = setBornTo;
-          editAuthor = author;
-          break;
+    addBook: async (_, args) => {
+      const { title, author, published, genres } = args;
+      let hasAuthor = await Author.findOne({ name: author });
+      console.log(hasAuthor);
+      try {
+        if (!hasAuthor) {
+          hasAuthor = await new Author({ name: author }).save();
         }
+        const newBook = await new Book({
+          title,
+          published,
+          genres,
+          author: hasAuthor.id,
+        }).save();
+        return newBook.populate("author");
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        });
       }
-      return editAuthor;
+    },
+    editAuthor: async (_, { name, setBornTo }) => {
+      const author = await Author.findOne({ name });
+      author.born = setBornTo;
+      return author.save();
     },
   },
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (_, args) => {
+    bookCount: () => Book.collection.countDocuments(),
+    authorCount: () => Author.collection.countDocuments(),
+    allBooks: async (_, args) => {
       const { author, genre } = args;
-      if (!author && !genre) return books;
-      if (author && genre) {
-        return books
-          .filter(
-            (book) =>
-              book.author.includes(author) || book.genres.includes(genre)
-          )
-          .map((book) => {
-            if (book.author.includes(author) || book.genres.includes(genre)) {
-              return book;
-            }
-          });
-      }
-      const bookKey = author ? "author" : "genres";
-      const bookFilter = author || genre;
-      return books
-        .filter((book) => book[bookKey].includes(bookFilter))
-        .map((book) => {
-          if (book[bookKey].includes(bookFilter)) {
-            return book;
-          }
-        });
+      const books = await Book.find({}).populate("author");
+      console.log(books);
+      return books;
+      // return Book.find({});
     },
-    allAuthors: () => authors,
+    allAuthors: async () => {
+      return await Author.find({});
+    },
   },
   Author: {
     bookCount: (root, args) => {
