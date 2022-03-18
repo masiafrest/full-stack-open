@@ -44,7 +44,7 @@ export default function SetBirthyear() {
           >
             {years.map((year, idx) => {
               return (
-                <option key={year} value={year} selected={idx === 0}>
+                <option key={year} value={year} defaultValue={idx === 0}>
                   {year}
                 </option>
               );
