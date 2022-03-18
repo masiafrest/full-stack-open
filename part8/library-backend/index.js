@@ -90,10 +90,16 @@ const resolvers = {
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (_, args) => {
       const { author, genre } = args;
-      const books = await Book.find({}).populate("author");
-      console.log(books);
-      return books;
-      // return Book.find({});
+      let hasAuthor;
+      if (author) {
+        hasAuthor = await Author.findOne({ name: author });
+      }
+
+      const booksFilter = {};
+      if (hasAuthor) booksFilter.author = hasAuthor.id;
+      if (genre) booksFilter.genres = { $in: [genre] };
+
+      return Book.find(booksFilter).populate("author");
     },
     allAuthors: async () => {
       return await Author.find({});
