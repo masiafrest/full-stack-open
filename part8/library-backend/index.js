@@ -80,7 +80,7 @@ const resolvers = {
       }
       const { title, author, published, genres } = args;
       let hasAuthor = await Author.findOne({ name: author });
-      console.log(hasAuthor);
+      console.log("hasauthor", hasAuthor);
       try {
         if (!hasAuthor) {
           hasAuthor = await new Author({ name: author }).save();
@@ -108,7 +108,7 @@ const resolvers = {
     },
     createUser: (_, args) => {
       const user = new User(args);
-      console.log(user);
+      console.log("createuser", user);
       return user.save().catch((error) => {
         throw new UserInputError(error.message, { invalidArgs: args });
       });
@@ -119,7 +119,7 @@ const resolvers = {
       if (!user || password !== "secret") {
         throw new UserInputError("wrong credentials");
       }
-      console.log(user);
+      console.log("login", user);
       const userForToken = {
         username: user.username,
         id: user._id,
@@ -163,7 +163,9 @@ const server = new ApolloServer({
     const auth = req ? req.headers.authorization : null;
     if (auth && auth.toLowerCase().startsWith("bearer ")) {
       const decodedToken = jwt.verify(auth.substring(7), SECRET);
+      console.log("decodedtoken", decodedToken);
       const currentUser = await User.findById(decodedToken.id);
+      console.log("currentUser", currentUser);
       return { currentUser };
     }
   },

@@ -7,6 +7,15 @@ export const LOGIN = gql`
     }
   }
 `;
+export const ME = gql`
+  query {
+    me {
+      id
+      username
+      favoriteGenre
+    }
+  }
+`;
 
 export const ALL_AUTHORS = gql`
   query {
@@ -65,13 +74,5 @@ export const EDIT_AUTHOR = gql`
       name
       born
     }
-  }
-`;
-
-export const ME = gql`
-  query me {
-    id
-    username
-    favoriteGenre
   }
 `;
