@@ -1,6 +1,10 @@
 const { gql } = require("apollo-server");
 
 const typeDefs = gql`
+  type Subscription {
+    bookAdded: Book!
+  }
+
   type Query {
     me: User
     bookCount: Int

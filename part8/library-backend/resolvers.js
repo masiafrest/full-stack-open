@@ -1,5 +1,9 @@
+const { UserInputError } = require("apollo-server");
 const Book = require("./models/Book");
 const Author = require("./models/Author");
+
+const { PubSub } = require("graphql-subscriptions");
+const pubsub = new PubSub();
 
 const resolvers = {
   Mutation: {
@@ -14,23 +18,27 @@ const resolvers = {
       }
       const { title, author, published, genres } = args;
       let hasAuthor = await Author.findOne({ name: author });
-      console.log("hasauthor", hasAuthor);
+      const newBook = new Book({
+        title,
+        published,
+        genres,
+        author: hasAuthor ? hasAuthor.id : undefined,
+      });
+
       try {
         if (!hasAuthor) {
           hasAuthor = await new Author({ name: author }).save();
         }
-        const newBook = await new Book({
-          title,
-          published,
-          genres,
-          author: hasAuthor.id,
-        }).save();
-        return newBook.populate("author");
+        await newBook.save();
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
         });
       }
+      console.log("pubsub");
+      pubsub.publish("BOOK_ADDED", { bookAdded: newBook });
+      console.log("published");
+      return newBook.populate("author");
     },
     editAuthor: async (_, { name, setBornTo }, { currentUser }) => {
       if (!currentUser) {
@@ -60,6 +68,11 @@ const resolvers = {
       };
 
       return { value: jwt.sign(userForToken, SECRET) };
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"]),
     },
   },
   Query: {
