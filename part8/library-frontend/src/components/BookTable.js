@@ -9,10 +9,10 @@ export default function BookTable({ books }) {
             <th>published</th>
           </tr>
           {books.map((book) => (
-            <tr key={book.title}>
-              <td>{book.title}</td>
-              <td>{book.author.name}</td>
-              <td>{book.published}</td>
+            <tr key={book?.title}>
+              <td>{book?.title}</td>
+              <td>{book?.author?.name}</td>
+              <td>{book?.published}</td>
             </tr>
           ))}
         </tbody>

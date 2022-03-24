@@ -1,10 +1,14 @@
 const { UserInputError } = require("apollo-server");
+const jwt = require("jsonwebtoken");
+
 const Book = require("./models/Book");
 const Author = require("./models/Author");
+const User = require("./models/User");
 
 const { PubSub } = require("graphql-subscriptions");
 const pubsub = new PubSub();
 
+const SECRET = process.env.SECRET;
 const resolvers = {
   Mutation: {
     deleteAll: async () => {
@@ -35,9 +39,7 @@ const resolvers = {
           invalidArgs: args,
         });
       }
-      console.log("pubsub");
       pubsub.publish("BOOK_ADDED", { bookAdded: newBook });
-      console.log("published");
       return newBook.populate("author");
     },
     editAuthor: async (_, { name, setBornTo }, { currentUser }) => {
@@ -50,7 +52,6 @@ const resolvers = {
     },
     createUser: (_, args) => {
       const user = new User(args);
-      console.log("createuser", user);
       return user.save().catch((error) => {
         throw new UserInputError(error.message, { invalidArgs: args });
       });
@@ -61,7 +62,6 @@ const resolvers = {
       if (!user || password !== "secret") {
         throw new UserInputError("wrong credentials");
       }
-      console.log("login", user);
       const userForToken = {
         username: user.username,
         id: user._id,
@@ -98,7 +98,7 @@ const resolvers = {
   },
   Author: {
     bookCount: (root, args) => {
-      return books.filter((book) => book.author === root.name).length;
+      return Book.collection.countDocuments({ author: root._id });
     },
   },
 };

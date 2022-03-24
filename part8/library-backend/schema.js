@@ -42,8 +42,8 @@ const typeDefs = gql`
   }
 
   type User {
-    username: String!
-    favoriteGenre: String!
+    username: String
+    favoriteGenre: String
     id: ID!
   }
 

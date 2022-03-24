@@ -14,14 +14,12 @@ export default function Recommend({ show }) {
   if (me.loading) {
     return <div>...loading</div>;
   }
-  console.log(me.data.me);
-  console.log(books.data?.allBooks);
   const favoriteGenre = me.data?.me.favoriteGenre;
   return (
     <>
       <h2>Recommendations</h2>
       <span>books in your favorite genre {favoriteGenre}</span>
-      {books.data.allBooks.length === 0 ? (
+      {books.data?.allBooks.length === 0 ? (
         <div>no books on genre {favoriteGenre}</div>
       ) : (
         <BookTable books={books.data?.allBooks || []} />
