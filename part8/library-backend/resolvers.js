@@ -93,14 +93,15 @@ const resolvers = {
       return Book.find(booksFilter).populate("author");
     },
     allAuthors: async () => {
-      return await Author.find({});
+      return await Author.find({}).populate("bookCount");
     },
   },
-  Author: {
-    bookCount: (root, args) => {
-      return Book.collection.countDocuments({ author: root._id });
-    },
-  },
+  // Author: {
+  //   bookCount: (root, args) => {
+  //     console.log("bookcount");
+  //     return Book.collection.countDocuments({ author: root._id });
+  //   },
+  // },
 };
 
 module.exports = resolvers;

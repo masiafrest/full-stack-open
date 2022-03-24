@@ -30,7 +30,7 @@ const typeDefs = gql`
     name: String
     id: ID
     born: Int
-    bookCount: Int
+    bookCount: [Book]
   }
 
   type Book {
