@@ -1,6 +1,11 @@
-interface BmiValues {
+export interface BmiValues {
   value1: number;
   value2: number;
+}
+export interface BmiResult {
+  height: number;
+  weight: number;
+  bmi: string;
 }
 
 const parseArgs = (args: Array<string>): BmiValues => {
@@ -16,8 +21,8 @@ const parseArgs = (args: Array<string>): BmiValues => {
   throw new Error("Provided values were not numbers!");
 };
 
-function calculateBmi(height: number, kilograms: number): string {
-  return "Overweigth";
+export function calculateBmi(height: number, kilograms: number): BmiResult {
+  return { height, weight: kilograms, bmi: "Normal (healthy weight)" };
 }
 
 try {
