@@ -8,10 +8,11 @@ interface Result {
   average: number;
 }
 
-function getArrayInputFromArgs(args: Array<string>): Array<number> {
+export function getArrayInputFromArgs(args: Array<string>): Array<number> {
   if (args.length <= 2) throw new Error("Not enough argumnets");
 
-  const [first, second, ...restArgs] = args;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_f, _s, ...restArgs] = args;
   const arrayOfNum = restArgs.map((e) => Number(e));
   if (!arrayOfNum.includes(NaN)) {
     return arrayOfNum;
@@ -19,7 +20,7 @@ function getArrayInputFromArgs(args: Array<string>): Array<number> {
   throw new Error("numbers only!");
 }
 
-function calculateExersices(dailyExerciseHours: Array<number>): Result {
+export function calculateExersices(_dailyExerciseHours: Array<number>): Result {
   return {
     periodLength: 7,
     trainingDays: 5,
@@ -30,16 +31,3 @@ function calculateExersices(dailyExerciseHours: Array<number>): Result {
     average: 1.9285714285714286,
   };
 }
-
-try {
-  const arrayOfNum = getArrayInputFromArgs(process.argv);
-  console.log(calculateExersices(arrayOfNum));
-} catch (error: unknown) {
-  let errorMessage = "Something bad happend";
-  if (error instanceof Error) {
-    errorMessage += ` Error: ${error.message}`;
-  }
-  console.log(errorMessage);
-}
-
-getArrayInputFromArgs(process.argv);
