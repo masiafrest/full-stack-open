@@ -13,12 +13,13 @@ const getNonSensitiveEntries = (): NonSensitiveDiagnoseEntry[] => {
   }));
 };
 
-const addDiary = () => {
-  return null;
+const addDiagnose = (diagnoseEntry: Diagnose): Diagnose => {
+  diagnoses.push(diagnoseEntry);
+  return diagnoseEntry;
 };
 
 export default {
   getEntries,
-  addDiary,
+  addDiagnose,
   getNonSensitiveEntries,
 };
