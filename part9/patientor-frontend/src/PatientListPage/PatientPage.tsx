@@ -6,6 +6,7 @@ import { apiBaseUrl } from "../constants";
 import { Patient } from "../types";
 import { Typography } from "@material-ui/core";
 import { useStateValue } from "../state";
+import DiagnoseList from "./DiagnoseList";
 
 export default function PatientPage() {
   const [state, dispatch] = useStateValue();
@@ -54,11 +55,7 @@ export default function PatientPage() {
           <>
             <span>{entry.description}</span>
             {entry.diagnosisCodes && (
-              <ul>
-                {entry.diagnosisCodes.map((code) => (
-                  <li key={code}>{code}</li>
-                ))}
-              </ul>
+              <DiagnoseList diagnosisCodes={entry.diagnosisCodes} />
             )}
           </>
         );

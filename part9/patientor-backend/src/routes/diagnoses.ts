@@ -8,6 +8,15 @@ router.get("/", (_req, res) => {
   res.send(diagnosesService.getNonSensitiveEntries());
 });
 
+router.get("/:code", (req, res) => {
+  const diagnose = diagnosesService.getByCode(req.params.code);
+  if (diagnose) {
+    res.send(diagnose);
+  } else {
+    res.sendStatus(400);
+  }
+});
+
 router.post("/", (req, res) => {
   try {
     const newDiagnoseEntry = toNewDiagnoseEntry(req.body);

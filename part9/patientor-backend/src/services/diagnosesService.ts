@@ -13,6 +13,10 @@ const getNonSensitiveEntries = (): NonSensitiveDiagnoseEntry[] => {
   }));
 };
 
+const getByCode = (code: string): Diagnose | undefined => {
+  return diagnoses.find((diagnose) => diagnose.code === code);
+};
+
 const addDiagnose = (diagnoseEntry: Diagnose): Diagnose => {
   diagnoses.push(diagnoseEntry);
   return diagnoseEntry;
@@ -22,4 +26,5 @@ export default {
   getEntries,
   addDiagnose,
   getNonSensitiveEntries,
+  getByCode,
 };
