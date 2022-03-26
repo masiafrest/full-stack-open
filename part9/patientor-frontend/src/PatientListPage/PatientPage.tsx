@@ -28,16 +28,41 @@ export default function PatientPage() {
       params.id && void fetchPatient(params.id);
     }
   }, []);
-
   if (!patient) {
     return <span>no patient</span>;
   }
 
   return (
     <>
-      <Typography variant="h3">{patient.name}</Typography>
+      <Typography variant="h2">{patient.name}</Typography>
       <Typography>ssn: {patient.ssn}</Typography>
       <Typography>occupation: {patient.occupation}</Typography>
+      <Typography variant="h3">entries</Typography>
+      {patient.entries.map((entry) => {
+        // switch (entry.type) {
+        //   case "HealthCheck":
+        //     break;
+        //   case "OccupationalHealthcare":
+        //     break;
+        //   case "Hospital":
+        //     break;
+        //   default:
+        //     break;
+        // }
+
+        return (
+          <>
+            <span>{entry.description}</span>
+            {entry.diagnosisCodes && (
+              <ul>
+                {entry.diagnosisCodes.map((code) => (
+                  <li key={code}>{code}</li>
+                ))}
+              </ul>
+            )}
+          </>
+        );
+      })}
     </>
   );
 }
