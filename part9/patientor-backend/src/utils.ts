@@ -21,6 +21,7 @@ const toNewPatientEntry = ({
     ssn: parseData(ssn),
     gender: parseGender(gender),
     occupation: parseData(occupation),
+    entries: [],
   };
 
   return newEntry;
