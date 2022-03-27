@@ -1,0 +1,29 @@
+@hansGruber = d27736ec-f723-11e9-8f0b-362b9e155667
+
+POST http://localhost:3001/api/patients/{{hansGruber}}/entries
+Content-Type: application/json
+
+{
+  "date": "1970-04-25",
+  "specialist": "MD House",
+  "description": "testing description",
+  # "diagnosisCodes": Array<Diagnose["code"]>,
+  "type": "HealthCheck",
+  "healthCheckRating": 2
+}
+
+###
+GET http://localhost:3001/api/patients/{{hansGruber}}
+
+### post wrong type it should res without healthCheckRating
+POST http://localhost:3001/api/patients/{{hansGruber}}/entries
+Content-Type: application/json
+
+{
+  "date": "1970-04-25",
+  "specialist": "MD House",
+  "description": "testing description",
+  # "diagnosisCodes": Array<Diagnose["code"]>,
+  "type": "OccupationalHealthcare",
+  "healthCheckRating": 2
+}

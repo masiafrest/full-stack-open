@@ -1,4 +1,4 @@
-import { NewPatientEntry, Gender, Diagnose } from "./types";
+import { NewPatientEntry, Gender, Diagnose, EntryWithOutId } from "./types";
 
 type PatientFields = {
   name: unknown;
@@ -17,7 +17,7 @@ const toNewPatientEntry = ({
 }: PatientFields): NewPatientEntry => {
   const newEntry: NewPatientEntry = {
     name: parseData(name),
-    dateOfBirth: parseDateOfBirth(dateOfBirth),
+    dateOfBirth: parseDate(dateOfBirth),
     ssn: parseData(ssn),
     gender: parseGender(gender),
     occupation: parseData(occupation),
@@ -47,7 +47,7 @@ const parseData = (data: unknown): string => {
 const isDate = (date: string): boolean => {
   return Boolean(Date.parse(date));
 };
-const parseDateOfBirth = (date: unknown): string => {
+const parseDate = (date: unknown): string => {
   if (!date || !isString(date) || !isDate(date)) {
     throw new Error("Incorrect or missing date of birth");
   }
@@ -90,4 +90,48 @@ const toNewDiagnoseEntry = ({ code, name, latin }: Diagnose): Diagnose => {
   return newDiagnose;
 };
 
-export { toNewPatientEntry, toNewDiagnoseEntry };
+const toNewEntry = (entry: EntryWithOutId): EntryWithOutId => {
+  switch (entry.type) {
+    case "HealthCheck":
+      return {
+        date: parseDate(entry.date),
+        description: parseData(entry.description),
+        specialist: parseData(entry.specialist),
+        diagnosisCodes: entry.diagnosisCodes,
+        type: entry.type,
+        healthCheckRating: entry.healthCheckRating,
+      };
+    case "Hospital":
+      return {
+        date: parseDate(entry.date),
+        description: parseData(entry.description),
+        specialist: entry.specialist,
+        diagnosisCodes: entry.diagnosisCodes,
+        type: entry.type,
+        discharge: entry.discharge,
+      };
+    case "OccupationalHealthcare":
+      return {
+        date: parseDate(entry.date),
+        description: parseData(entry.description),
+        specialist: entry.specialist,
+        diagnosisCodes: entry.diagnosisCodes,
+        type: entry.type,
+        sickLeave: entry.sickLeave,
+        employerName: entry.employerName,
+      };
+    default:
+      return assertNever(entry);
+  }
+};
+
+/**
+ * Helper function for exhaustive type checking
+ */
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
+
+export { toNewPatientEntry, toNewDiagnoseEntry, toNewEntry };
