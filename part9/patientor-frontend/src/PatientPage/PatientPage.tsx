@@ -6,7 +6,7 @@ import { apiBaseUrl } from "../constants";
 import { Patient } from "../types";
 import { Typography } from "@material-ui/core";
 import { useStateValue } from "../state";
-import DiagnoseList from "./DiagnoseList";
+import EntryDetails from "./EntryDetails";
 
 export default function PatientPage() {
   const [state, dispatch] = useStateValue();
@@ -40,24 +40,10 @@ export default function PatientPage() {
       <Typography>occupation: {patient.occupation}</Typography>
       <Typography variant="h3">entries</Typography>
       {patient.entries.map((entry) => {
-        // switch (entry.type) {
-        //   case "HealthCheck":
-        //     break;
-        //   case "OccupationalHealthcare":
-        //     break;
-        //   case "Hospital":
-        //     break;
-        //   default:
-        //     break;
-        // }
-
         return (
-          <>
-            <span>{entry.description}</span>
-            {entry.diagnosisCodes && (
-              <DiagnoseList diagnosisCodes={entry.diagnosisCodes} />
-            )}
-          </>
+          <div style={{ margin: "5px 0" }} key={entry.id}>
+            <EntryDetails entry={entry} />
+          </div>
         );
       })}
     </>
