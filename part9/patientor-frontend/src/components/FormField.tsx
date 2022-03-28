@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ErrorMessage, Field, FieldProps, FormikProps } from "formik";
 import {
   Select,
@@ -7,7 +7,7 @@ import {
   TextField as TextFieldMUI,
   Typography,
 } from "@material-ui/core";
-import { Diagnose, Gender } from "../types";
+import { Diagnose, EntryType, Gender } from "../types";
 import { InputLabel } from "@material-ui/core";
 import Input from "@material-ui/core/Input";
 
@@ -76,25 +76,10 @@ interface NumberProps extends FieldProps {
 }
 
 export const NumberField = ({ field, label, min, max }: NumberProps) => {
-  const [value, setValue] = useState<number>();
-
   return (
     <div style={{ marginBottom: "1em" }}>
-      <TextFieldMUI
-        fullWidth
-        label={label}
-        placeholder={String(min)}
-        type="number"
-        {...field}
-        value={value}
-        onChange={(e) => {
-          const value = parseInt(e.target.value);
-          if (value === undefined) return;
-          if (value > max) setValue(max);
-          else if (value <= min) setValue(min);
-          else setValue(Math.floor(value));
-        }}
-      />
+      <InputLabel>{label}</InputLabel>
+      <Field {...field} type='number' min={min} max={max} />
       <Typography variant="subtitle2" style={{ color: "red" }}>
         <ErrorMessage name={field.name} />
       </Typography>
@@ -140,6 +125,34 @@ export const DiagnosisSelection = ({
           </MenuItem>
         ))}
       </Select>
+      <ErrorMessage name={field} />
+    </FormControl>
+  );
+};
+
+export const EntryTypeSelection = ({
+  entryTypes,
+}: {
+  entryTypes: EntryType[];
+}) => {
+  const field = "type";
+
+  return (
+    <FormControl style={{ width: 552, marginBottom: "30px" }}>
+      <InputLabel>Select Entry Types</InputLabel>
+      <Field
+        fullWidth
+        style={{ marginBottom: "0.5em" }}
+        label='Entry Type'
+        component={FormikSelect}
+        name='type'
+      >
+        {entryTypes.map((type) => (
+          <MenuItem key={type} value={type}>
+            {type}
+          </MenuItem>
+        ))}
+      </Field>
       <ErrorMessage name={field} />
     </FormControl>
   );
