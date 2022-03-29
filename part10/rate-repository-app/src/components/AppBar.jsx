@@ -16,10 +16,6 @@ const AppBar = () => {
       <ScrollView horizontal>
         <AppBarTab label="Home" to="/" />
         <AppBarTab label="Sign in" to="/signin" />
-        <AppBarTab label="Sign in" to="/signin" />
-        <AppBarTab label="Sign in" to="/signin" />
-        <AppBarTab label="Sign in" to="/signin" />
-        <AppBarTab label="Home" to="/" />
       </ScrollView>
     </View>
   );
