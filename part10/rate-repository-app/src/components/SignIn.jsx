@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
   form: {
     margin: 20,
     flexDirection: "column",
-    gap: 10,
+    // gap doesnt work on ios, work on desktop, didnt test on android
+    // gap: 10,
   },
   input: {
     padding: 10,
